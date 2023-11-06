@@ -1,7 +1,8 @@
 import kotlin.collections.ArrayList
 
-fun loadData(day: Int) : List<String> {
-    val fileName = "day_${day}_data.txt"
+fun loadData(day: Int, modifier: String? = null) : List<String> {
+    val fileNameSuffix = modifier?.let { "_$it" }.orEmpty()
+    val fileName = "day_${day}_data${fileNameSuffix}.txt"
     val inputStream = object {}.javaClass.getResourceAsStream(fileName)
         ?: throw Exception("Resource '$fileName' not found on classpath.")
 

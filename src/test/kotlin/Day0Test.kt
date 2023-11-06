@@ -13,7 +13,12 @@ class Day0Test {
         expectThat(maxCaloriesCarried(shortData())) isEqualTo 24000
     }
 
-    private fun longData() = loadData(0)
+    @Test
+    fun `part 1 short from file`() {
+        expectThat(maxCaloriesCarried(longData("short"))) isEqualTo 24000
+    }
+
+    private fun longData(modifier: String? = null) = loadData(0, modifier)
         .lineGroups()
         .map { elf ->
             elf.map { line -> line.toInt() }
