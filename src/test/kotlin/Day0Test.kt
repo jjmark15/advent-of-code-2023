@@ -18,17 +18,20 @@ class Day0Test {
         expectThat(maxCaloriesCarried(longData("short"))) isEqualTo 24000
     }
 
-    private fun longData(modifier: String? = null) = loadData(0, modifier)
-        .lineGroups()
-        .map { elf ->
-            elf.map { line -> line.toInt() }
-        }
+    @Test
+    fun `part 2 long`() {
+        expectThat(totalCaloriesCarriedByTopThreeElves(longData())) isEqualTo 206152
+    }
+
+    @Test
+    fun `part 2 short`() {
+        expectThat(totalCaloriesCarriedByTopThreeElves(shortData())) isEqualTo 45000
+    }
+
+    private fun longData(modifier: String? = null) =
+        loadData(0, modifier).lineGroups().map { elf -> elf.map(String::toInt) }
 
     private fun shortData() = listOf(
-        listOf(1000, 2000, 3000),
-        listOf(4000),
-        listOf(5000, 6000),
-        listOf(7000, 8000, 9000),
-        listOf(10000)
+        listOf(1000, 2000, 3000), listOf(4000), listOf(5000, 6000), listOf(7000, 8000, 9000), listOf(10000)
     )
 }

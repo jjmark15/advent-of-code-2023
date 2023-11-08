@@ -1,6 +1,8 @@
-import kotlin.collections.ArrayList
+import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 
-fun loadData(day: Int, modifier: String? = null) : List<String> {
+fun loadData(day: Int, modifier: String? = null): List<String> {
     val fileNameSuffix = modifier?.let { "_$it" }.orEmpty()
     val fileName = "day_${day}_data${fileNameSuffix}.txt"
     val inputStream = object {}.javaClass.getResourceAsStream(fileName)
@@ -9,15 +11,26 @@ fun loadData(day: Int, modifier: String? = null) : List<String> {
     return inputStream.bufferedReader().readLines()
 }
 
-fun List<String>.lineGroups(): List<List<String>> {
-    val lineGroups = this.fold(mutableListOf<MutableList<String>>(mutableListOf())) { acc, curr ->
-        if (curr.isEmpty()) {
-            acc.add(ArrayList())
+fun List<String>.lineGroups(): List<List<String>> =
+    this.fold(mutableListOf<MutableList<String>>(mutableListOf())) { lineGroups, line ->
+        if (line.isEmpty()) {
+            lineGroups.add(mutableListOf())
         } else {
-            acc.last().add(curr)
+            lineGroups.last().add(line)
         }
-        acc
+        lineGroups
     }.filter { it.isNotEmpty() }
 
-    return lineGroups
+class ResourceLoadingTest {
+
+    @Test
+    fun `groups consecutive non-empty lines`() {
+        expectThat(
+            listOf(
+                "one", "", "two", "three", "", "", "four", ""
+            ).lineGroups()
+        ) isEqualTo listOf(
+            listOf("one"), listOf("two", "three"), listOf("four")
+        )
+    }
 }
