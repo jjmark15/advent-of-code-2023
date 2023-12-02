@@ -26,6 +26,16 @@ class Day2Test {
         expectThat(part1(shortData(), 12, 13, 14)) isEqualTo 8
     }
 
+    @Test
+    fun `part 2 long`() {
+        expectThat(part2(longData())) isEqualTo 63711
+    }
+
+    @Test
+    fun `part 2 short`() {
+        expectThat(part2(shortData())) isEqualTo 2286
+    }
+
     private fun longData(modifier: String? = null): List<Game> =
         loadData(2, modifier).map { line -> GameGrammar.tryParseToEnd(line).toParsedOrThrow().value }
 

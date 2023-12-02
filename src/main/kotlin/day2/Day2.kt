@@ -1,5 +1,7 @@
 package day2
 
+import kotlin.math.max
+
 data class Game(val id: Int, val draws: List<CubeDraw>)
 
 sealed class CubeColour {
@@ -20,3 +22,13 @@ fun isPossible(game: Game, maxRed: Int, maxGreen: Int, maxBlue: Int): Boolean {
         draw.redCount <= maxRed && draw.greenCount <= maxGreen && draw.blueCount <= maxBlue
     }
 }
+
+fun part2(games: List<Game>): Int = games.map { game ->
+    game.draws.reduce { minimums, current ->
+        CubeDraw(
+            max(minimums.redCount, current.redCount),
+            max(minimums.greenCount, current.greenCount),
+            max(minimums.blueCount, current.blueCount)
+        )
+    }
+}.sumOf { it.blueCount * it.redCount * it.greenCount }
