@@ -1,3 +1,5 @@
+package day1
+
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.result.isSuccess
 
@@ -13,15 +15,15 @@ val DIGIT_WORDS: Map<String, Int> = mapOf(
     "nine" to 9,
 )
 
-fun naiveSumOfCalibrationValues(corruptedCalibrationValues: List<String>): Int =
+fun part1(corruptedCalibrationValues: List<String>): Int =
     corruptedCalibrationValues.map { value ->
         value.filter { c ->
             Result.of<Int, NumberFormatException> { c.toString().toInt() }.isSuccess()
         }
     }.map { "${it.first()}${it.last()}" }.sumOf { it.toInt() }
 
-fun sumOfCalibrationValues(corruptedCalibrationValues: List<String>): Int =
-    naiveSumOfCalibrationValues(corruptedCalibrationValues.map { value ->
+fun part2(corruptedCalibrationValues: List<String>): Int =
+    part1(corruptedCalibrationValues.map { value ->
         val newChars: MutableList<String> = mutableListOf()
 
         for (i in value.indices) {

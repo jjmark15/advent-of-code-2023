@@ -1,3 +1,7 @@
+package day0
+
+import lineGroups
+import loadData
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
