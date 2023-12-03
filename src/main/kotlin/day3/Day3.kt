@@ -15,7 +15,7 @@ fun part1(schematic: List<String>): Int {
 
     for ((i, row) in schematic.withIndex()) {
         partNumberSum += numbersFrom(row, i).filter { number ->
-            symbolPositions.any { position -> number.position.isAdjacentTo(position) }
+            symbolPositions.any { position -> position.isAdjacentTo(number.position) }
         }.sumOf { it.value }
     }
 
@@ -67,6 +67,7 @@ private data class SchemaPartNumber(val value: Int, val position: SchematicPosit
 
 private data class SchematicPosition(val columnStart: Int, val columnEnd: Int, val row: Int) {
     fun isAdjacentTo(other: SchematicPosition): Boolean {
-        return other.columnStart >= columnStart - 1 && other.columnEnd <= columnEnd + 1 && other.row >= row - 1 && other.row <= row + 1
+        return other.columnStart >= columnStart - 1 && other.columnEnd <= columnEnd + 1 && other.row >= row - 1 && other.row <= row + 1 ||
+                columnStart >= other.columnStart - 1 && columnEnd <= other.columnEnd + 1 && row >= other.row - 1 && row <= other.row + 1
     }
 }
