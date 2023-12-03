@@ -30,7 +30,7 @@ fun part2(schematic: List<String>): Int {
     return schematic.withIndex().flatMap { (rowIndex, rowString) ->
         rowString.split("").filter { it.isNotEmpty() }.withIndex().filter { (_, character) -> character == "*" }
             .map { (columnIndex, character) ->
-                val position = SchematicPosition(columnIndex, columnIndex, rowIndex)
+                val position = positionGivenEnd(character, columnIndex, rowIndex)
                 val adjacentNumbers = numbers.filter { number -> number.position.isAdjacentTo(position) }
                 if (adjacentNumbers.size == 2) {
                     return@map adjacentNumbers[0].value * adjacentNumbers[1].value
@@ -56,7 +56,7 @@ private fun numbersFrom(rowString: String, row: Int): List<SchemaPartNumber> {
                 val toString = currentNumberString.toString()
                 result.add(
                     SchemaPartNumber(
-                        toString.toInt(), positionGivenEnd(toString, i, row)
+                        toString.toInt(), positionGivenEnd(toString, i - 1, row)
                     )
                 )
             }
@@ -68,7 +68,7 @@ private fun numbersFrom(rowString: String, row: Int): List<SchemaPartNumber> {
         val toString = currentNumberString.toString()
         result.add(
             SchemaPartNumber(
-                toString.toInt(), positionGivenEnd(toString, rowString.length, row)
+                toString.toInt(), positionGivenEnd(toString, rowString.length - 1, row)
             )
         )
     }
@@ -78,7 +78,7 @@ private fun numbersFrom(rowString: String, row: Int): List<SchemaPartNumber> {
 
 private fun positionGivenEnd(s: String, columnEnd: Int, row: Int): SchematicPosition {
     val length = s.length
-    return SchematicPosition(columnEnd - length, columnEnd - 1, row)
+    return SchematicPosition(columnEnd + 1 - length, columnEnd, row)
 }
 
 private data class SchemaPartNumber(val value: Int, val position: SchematicPosition)
