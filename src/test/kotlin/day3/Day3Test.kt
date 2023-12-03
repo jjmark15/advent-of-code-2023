@@ -16,6 +16,16 @@ class Day3Test {
         expectThat(part1(shortData())) isEqualTo 4361
     }
 
+    @Test
+    fun `part 2 long`() {
+        expectThat(part2(longData())) isEqualTo 80703636
+    }
+
+    @Test
+    fun `part 2 short`() {
+        expectThat(part2(shortData())) isEqualTo 467835
+    }
+
     private fun longData(modifier: String? = null): List<String> = loadData(3, modifier)
 
     private fun shortData() = longData("short")

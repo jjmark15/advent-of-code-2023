@@ -22,6 +22,24 @@ fun part1(schematic: List<String>): Int {
     return partNumberSum
 }
 
+fun part2(schematic: List<String>): Int {
+    val numbers = schematic.withIndex().flatMap { (rowIndex, rowString) ->
+        numbersFrom(rowString, rowIndex)
+    }
+
+    return schematic.withIndex().flatMap { (rowIndex, rowString) ->
+        rowString.split("").filter { it.isNotEmpty() }.withIndex().filter { (_, character) -> character == "*" }
+            .map { (columnIndex, character) ->
+                val position = SchematicPosition(columnIndex, columnIndex, rowIndex)
+                val adjacentNumbers = numbers.filter { number -> number.position.isAdjacentTo(position) }
+                if (adjacentNumbers.size == 2) {
+                    return@map adjacentNumbers[0].value * adjacentNumbers[1].value
+                }
+                0
+            }
+    }.sum()
+}
+
 private fun isASymbol(s: String): Boolean {
     return !".1234567890".contains(s)
 }
@@ -67,7 +85,20 @@ private data class SchemaPartNumber(val value: Int, val position: SchematicPosit
 
 private data class SchematicPosition(val columnStart: Int, val columnEnd: Int, val row: Int) {
     fun isAdjacentTo(other: SchematicPosition): Boolean {
-        return other.columnStart >= columnStart - 1 && other.columnEnd <= columnEnd + 1 && other.row >= row - 1 && other.row <= row + 1 ||
-                columnStart >= other.columnStart - 1 && columnEnd <= other.columnEnd + 1 && row >= other.row - 1 && row <= other.row + 1
+        return adjacentPoints().any { point -> other.points().contains(point) }
+    }
+
+    private fun adjacentPoints() = ((columnStart - 1)..(columnEnd + 1)).flatMap { column ->
+        listOf(Point(column, row - 1), Point(column, row), Point(column, row + 1))
+    }
+
+    fun contains(point: Point): Boolean {
+        return row == point.row && columnStart <= point.column && columnEnd >= point.column
+    }
+
+    fun points(): List<Point> {
+        return (columnStart..columnEnd).map { Point(it, row) }
     }
 }
+
+data class Point(val column: Int, val row: Int)
