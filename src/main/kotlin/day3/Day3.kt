@@ -88,8 +88,17 @@ private data class SchematicPosition(val columnStart: Int, val columnEnd: Int, v
         return adjacentPoints().any { point -> other.points().contains(point) }
     }
 
-    private fun adjacentPoints() = ((columnStart - 1)..(columnEnd + 1)).flatMap { column ->
-        listOf(Point(column, row - 1), Point(column, row), Point(column, row + 1))
+    private fun adjacentPoints(): List<Point> {
+        val points = mutableListOf<Point>()
+        val leftMostColumn = columnStart - 1
+        val rightMostColumn = columnEnd + 1
+
+        points.addAll((leftMostColumn..rightMostColumn).map { column -> Point(column, row - 1) })
+        points.addAll((leftMostColumn..rightMostColumn).map { column -> Point(column, row + 1) })
+        points.add(Point(leftMostColumn, row))
+        points.add(Point(rightMostColumn, row))
+
+        return points
     }
 
     fun contains(point: Point): Boolean {
