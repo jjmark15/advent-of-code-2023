@@ -18,7 +18,7 @@ import strikt.assertions.isEqualTo
 class Day2Test {
     @Test
     fun `part 1 long`() {
-        expectThat(part1(longData(), 12, 13, 14)) isEqualTo 2439
+        expectThat(part1(data(), 12, 13, 14)) isEqualTo 2439
     }
 
     @Test
@@ -28,7 +28,7 @@ class Day2Test {
 
     @Test
     fun `part 2 long`() {
-        expectThat(part2(longData())) isEqualTo 63711
+        expectThat(part2(data())) isEqualTo 63711
     }
 
     @Test
@@ -36,10 +36,10 @@ class Day2Test {
         expectThat(part2(shortData())) isEqualTo 2286
     }
 
-    private fun longData(modifier: String? = null): List<Game> =
+    private fun data(modifier: String? = null): List<Game> =
         loadData(2, modifier).map { line -> GameGrammar.tryParseToEnd(line).toParsedOrThrow().value }
 
-    private fun shortData() = longData("short")
+    private fun shortData() = data("short")
 }
 
 object GameGrammar : Grammar<Game>() {

@@ -8,7 +8,7 @@ import strikt.assertions.isEqualTo
 class Day3Test {
     @Test
     fun `part 1 long`() {
-        expectThat(part1(longData())) isEqualTo 539590
+        expectThat(part1(data())) isEqualTo 539590
     }
 
     @Test
@@ -18,7 +18,7 @@ class Day3Test {
 
     @Test
     fun `part 2 long`() {
-        expectThat(part2(longData())) isEqualTo 80703636
+        expectThat(part2(data())) isEqualTo 80703636
     }
 
     @Test
@@ -26,7 +26,7 @@ class Day3Test {
         expectThat(part2(shortData())) isEqualTo 467835
     }
 
-    private fun longData(modifier: String? = null): List<String> = loadData(3, modifier)
+    private fun data(modifier: String? = null): List<String> = loadData(3, modifier)
 
-    private fun shortData() = longData("short")
+    private fun shortData() = data("short")
 }

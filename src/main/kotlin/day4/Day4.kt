@@ -2,11 +2,7 @@ package day4
 
 import kotlin.math.pow
 
-fun part1(scratchCards: List<ScratchCard>): Int {
-    return scratchCards.sumOf { scratchCard ->
-        scratchCard.score()
-    }
-}
+fun part1(scratchCards: List<ScratchCard>): Int = scratchCards.sumOf { scratchCard -> scratchCard.score() }
 
 fun part2(scratchCards: List<ScratchCard>): Int =
     scratchCards.fold(Pair(0, mutableMapOf<Int, Int>())) { (cardCount, cardCopies), card ->

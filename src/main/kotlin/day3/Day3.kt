@@ -40,9 +40,7 @@ fun part2(schematic: List<String>): Int {
     }.sum()
 }
 
-private fun isASymbol(s: String): Boolean {
-    return !".1234567890".contains(s)
-}
+private fun isASymbol(s: String): Boolean = !".1234567890".contains(s)
 
 private fun numbersFrom(rowString: String, row: Int): List<SchemaPartNumber> {
     val result: MutableList<SchemaPartNumber> = mutableListOf()
@@ -76,17 +74,13 @@ private fun numbersFrom(rowString: String, row: Int): List<SchemaPartNumber> {
     return result
 }
 
-private fun positionGivenEnd(s: String, columnEnd: Int, row: Int): SchematicPosition {
-    val length = s.length
-    return SchematicPosition(columnEnd + 1 - length, columnEnd, row)
-}
+private fun positionGivenEnd(s: String, columnEnd: Int, row: Int): SchematicPosition =
+    SchematicPosition(columnEnd + 1 - s.length, columnEnd, row)
 
 private data class SchemaPartNumber(val value: Int, val position: SchematicPosition)
 
 private data class SchematicPosition(val columnStart: Int, val columnEnd: Int, val row: Int) {
-    fun isAdjacentTo(other: SchematicPosition): Boolean {
-        return adjacentPoints().any { point -> other.points().contains(point) }
-    }
+    fun isAdjacentTo(other: SchematicPosition): Boolean = adjacentPoints().any { point -> other.contains(point) }
 
     private fun adjacentPoints(): List<Point> {
         val points = mutableListOf<Point>()
@@ -101,13 +95,7 @@ private data class SchematicPosition(val columnStart: Int, val columnEnd: Int, v
         return points
     }
 
-    fun contains(point: Point): Boolean {
-        return row == point.row && columnStart <= point.column && columnEnd >= point.column
-    }
-
-    fun points(): List<Point> {
-        return (columnStart..columnEnd).map { Point(it, row) }
-    }
+    fun contains(point: Point): Boolean = row == point.row && columnStart <= point.column && columnEnd >= point.column
 }
 
 data class Point(val column: Int, val row: Int)
