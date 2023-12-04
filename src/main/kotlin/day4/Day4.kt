@@ -8,27 +8,20 @@ fun part1(scratchCards: List<ScratchCard>): Int {
     }
 }
 
-fun part2(scratchCards: List<ScratchCard>): Int {
-    val cardCopies: MutableMap<Int, Int> = mutableMapOf()
-
-    var cardCount = 0
-
-    for (card in scratchCards) {
+fun part2(scratchCards: List<ScratchCard>): Int =
+    scratchCards.fold(Pair(0, mutableMapOf<Int, Int>())) { (cardCount, cardCopies), card ->
         val multiplier = 1 + (cardCopies.remove(card.id) ?: 0)
-
-        cardCount += multiplier
-
         val matchCount = card.matchCount()
+
         if (matchCount > 0) {
             val cardCopyIds = (card.id + 1)..(matchCount + card.id)
             for (id in cardCopyIds) {
                 cardCopies.compute(id) { _, copies -> (copies ?: 0) + multiplier }
             }
         }
-    }
 
-    return cardCount
-}
+        Pair(cardCount + multiplier, cardCopies)
+    }.first
 
 data class ScratchCard(val id: Int, val winningNumbers: List<Int>, val revealedNumbers: List<Int>) {
     fun score(): Int = matchCount().let { count ->
@@ -38,7 +31,6 @@ data class ScratchCard(val id: Int, val winningNumbers: List<Int>, val revealedN
             0
         }
     }
-
 
     fun matchCount(): Int = revealedNumbers.count { winningNumbers.contains(it) }
 }
