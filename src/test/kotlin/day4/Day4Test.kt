@@ -26,6 +26,16 @@ class Day4Test {
         expectThat(part1(shortData())) isEqualTo 13
     }
 
+    @Test
+    fun `part 2 long`() {
+        expectThat(part2(longData())) isEqualTo 5095824
+    }
+
+    @Test
+    fun `part 2 short`() {
+        expectThat(part2(shortData())) isEqualTo 30
+    }
+
     private fun longData(modifier: String? = null): List<ScratchCard> =
         loadData(4, modifier).map { line -> ScratchCardGrammar.tryParseToEnd(line).toParsedOrThrow().value }
 
