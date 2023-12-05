@@ -2,25 +2,25 @@ package day5
 
 fun part1(
     seeds: List<Long>, mappings: Mappings
-): Long = seeds.minOf { seed ->
-    mappings.seedToSoilMap.get(seed).let { mappings.soilToFertiliserMap.get(it) }
-        .let { mappings.fertiliserToWaterMap.get(it) }.let { mappings.waterToLightMap.get(it) }
-        .let { mappings.lightToTemperatureMap.get(it) }.let { mappings.temperatureToHumidityMap.get(it) }
-        .let { mappings.humidityToLocationMap.get(it) }
-}
+): Long = seeds.minOf { seed -> mappings.locationOfSeed(seed) }
 
+fun part2(
+    seedRanges: List<SeedRange>, mappings: Mappings
+): Long = seedRanges.minOf { seedRange ->
+    seedRange.range().minOf { seed ->
+        mappings.locationOfSeed(seed)
+    }
+}
 
 data class MappingRange(val sourceRangeStart: Long, val destinationRangeStart: Long, val rangeLength: Long) {
     fun get(id: Long): Long? {
-        for (index in (0..<rangeLength)) {
-            val source = sourceRangeStart + index
-            if (source > id) {
-                return null
-            }
-            if (source == id) return destinationRangeStart + index
+        val highestOverriddenValue = sourceRangeStart + rangeLength - 1
+        if (highestOverriddenValue < id || id < sourceRangeStart) {
+            return null
         }
 
-        return null
+        val offset = id - sourceRangeStart
+        return destinationRangeStart + offset
     }
 }
 
@@ -44,4 +44,14 @@ data class Mappings(
     val lightToTemperatureMap: Mapping,
     val temperatureToHumidityMap: Mapping,
     val humidityToLocationMap: Mapping
-)
+) {
+    fun locationOfSeed(seed: Long): Long {
+        return seedToSoilMap.get(seed).let { soilToFertiliserMap.get(it) }.let { fertiliserToWaterMap.get(it) }
+            .let { waterToLightMap.get(it) }.let { lightToTemperatureMap.get(it) }
+            .let { temperatureToHumidityMap.get(it) }.let { humidityToLocationMap.get(it) }
+    }
+}
+
+data class SeedRange(val start: Long, val length: Long) {
+    fun range(): LongRange = start..<start + length
+}
