@@ -11,16 +11,6 @@ fun loadData(day: Int, modifier: String? = null): List<String> {
     return inputStream.bufferedReader().readLines()
 }
 
-fun List<String>.lineGroups(): List<List<String>> =
-    this.fold(mutableListOf<MutableList<String>>(mutableListOf())) { lineGroups, line ->
-        if (line.isEmpty()) {
-            lineGroups.add(mutableListOf())
-        } else {
-            lineGroups.last().add(line)
-        }
-        lineGroups
-    }.filter { it.isNotEmpty() }
-
 class ResourceLoadingTest {
 
     @Test
