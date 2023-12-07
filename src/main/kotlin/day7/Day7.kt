@@ -21,8 +21,8 @@ sealed class HandType : Comparable<HandType> {
 
 data class Hand(val cards: List<CamelCard>) : Comparable<Hand> {
     private fun type(): HandType {
-        val jokers = cards.count { it.value == 'X' }
-        var counts = cards.filter { it.value != 'X' }.fold(mutableMapOf<CamelCard, Int>()) { acc, camelCard ->
+        val jokers = cards.count { it == JOKER }
+        var counts = cards.filter { it != JOKER }.fold(mutableMapOf<CamelCard, Int>()) { acc, camelCard ->
             acc.compute(camelCard) { _, current -> (current ?: 0) + 1 }
             acc
         }.values.sorted().reversed().toMutableList()
@@ -30,14 +30,13 @@ data class Hand(val cards: List<CamelCard>) : Comparable<Hand> {
         repeat(jokers) {
             var i = 0
             while (true) {
-                val atIndex = counts.getOrElse(i) { 0 } + 1
+                val newValue = counts.getOrElse(i) { 0 } + 1
                 val newList = counts.toMutableList()
                 if (newList.size == i) {
-                    newList.add(atIndex)
+                    newList.add(newValue)
                 }
-                newList[i] = atIndex
-                val newListTotal = newList.sum()
-                if (newListTotal <= 5) {
+                newList[i] = newValue
+                if (newList.sum() <= 5) {
                     counts = newList
                     break
                 }
@@ -80,5 +79,7 @@ data class CamelCard(val value: Char) : Comparable<CamelCard> {
         return order.indexOf(this.value) - order.indexOf(other.value)
     }
 }
+
+val JOKER: CamelCard = CamelCard('X')
 
 data class HandAndBid(val hand: Hand, val bid: Long)
