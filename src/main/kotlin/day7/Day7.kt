@@ -1,16 +1,13 @@
 package day7
 
 fun part1(input: List<HandAndBid>): Long =
-    input.sortedWith(compareBy { it.hand }).withIndex().sumOf { (i, handAndBid) -> handAndBid.bid * (i + 1) }
+    input.sortedBy { it.hand }.withIndex().sumOf { (i, handAndBid) -> handAndBid.bid * (i + 1) }
 
 sealed class HandType : Comparable<HandType> {
     override fun compareTo(other: HandType): Int {
         val handTypes = listOf(FiveOfAKind, FourOfAKind, FullHouse, ThreeOfAKind, TwoPair, OnePair, HighCard).reversed()
 
-        val index = handTypes.indexOf(this)
-        val otherIndex = handTypes.indexOf(other)
-
-        return index - otherIndex
+        return handTypes.indexOf(this) - handTypes.indexOf(other)
     }
 
     data object FiveOfAKind : HandType()
@@ -27,7 +24,7 @@ data class Hand(val cards: List<CamelCard>) : Comparable<Hand> {
         val counts = cards.fold(mutableMapOf<CamelCard, Int>()) { acc, camelCard ->
             acc.compute(camelCard) { _, current -> (current ?: 0) + 1 }
             acc
-        }.values.toList().sorted().reversed()
+        }.values.sorted().reversed()
 
         return when (counts) {
             listOf(5) -> HandType.FiveOfAKind
