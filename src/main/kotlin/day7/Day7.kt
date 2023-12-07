@@ -29,25 +29,15 @@ data class Hand(val cards: List<CamelCard>) : Comparable<Hand> {
             acc
         }.values.toList().sorted().reversed()
 
-        if (counts == listOf(5)) {
-            return HandType.FiveOfAKind
+        return when (counts) {
+            listOf(5) -> HandType.FiveOfAKind
+            listOf(4, 1) -> HandType.FourOfAKind
+            listOf(3, 2) -> HandType.FullHouse
+            listOf(3, 1, 1) -> HandType.ThreeOfAKind
+            listOf(2, 2, 1) -> HandType.TwoPair
+            listOf(2, 1, 1, 1) -> HandType.OnePair
+            else -> HandType.HighCard
         }
-        if (counts == listOf(4, 1)) {
-            return HandType.FourOfAKind
-        }
-        if (counts == listOf(3, 2)) {
-            return HandType.FullHouse
-        }
-        if (counts == listOf(3, 1, 1)) {
-            return HandType.ThreeOfAKind
-        }
-        if (counts == listOf(2, 2, 1)) {
-            return HandType.TwoPair
-        }
-        if (counts == listOf(2, 1, 1, 1)) {
-            return HandType.OnePair
-        }
-        return HandType.HighCard
     }
 
     override fun compareTo(other: Hand): Int {
