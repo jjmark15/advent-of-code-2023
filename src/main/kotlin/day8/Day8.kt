@@ -13,6 +13,29 @@ fun part1(instructions: Instructions, mappings: NetworkMap): Long {
     return steps
 }
 
+fun part2(instructions: Instructions, mappings: NetworkMap): Long {
+    var steps = 0L
+    val startingChar = 'A'
+    val targetChar = 'Z'
+    var currentNodes = mappings.keys.filter { it.endsWith(startingChar) }
+    var allEndInTarget = false
+
+    while (!allEndInTarget) {
+        val direction = instructions.getNext()
+        var endInTarget = true
+        currentNodes = currentNodes.map { node ->
+            val newNode = mappings.get(node, direction)
+            if (!newNode.endsWith(targetChar)) endInTarget = false
+            newNode
+        }
+        allEndInTarget = endInTarget
+
+        steps++
+    }
+
+    return steps
+}
+
 enum class Direction {
     Left, Right
 }
@@ -32,9 +55,9 @@ class Instructions(private val directions: List<Direction>) {
     }
 }
 
-data class DirectionTakenAtNode(val direction: Direction, val node: Node)
-
-data class Node(val name: String)
+data class Node(val name: String) {
+    fun endsWith(c: Char): Boolean = name.endsWith(c)
+}
 
 data class DirectionAlternatives(val left: Node, val right: Node)
 
