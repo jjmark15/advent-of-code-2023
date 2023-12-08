@@ -27,22 +27,8 @@ data class Hand(val cards: List<CamelCard>) : Comparable<Hand> {
             acc
         }.values.sorted().reversed().toMutableList()
 
-        repeat(jokers) {
-            var i = 0
-            while (true) {
-                val newValue = counts.getOrElse(i) { 0 } + 1
-                val newList = counts.toMutableList()
-                if (newList.size == i) {
-                    newList.add(newValue)
-                }
-                newList[i] = newValue
-                if (newList.sum() <= 5) {
-                    counts = newList
-                    break
-                }
-                i++
-            }
-        }
+        if (counts.size == 0) counts.add(0)
+        counts[0] += jokers
 
         return when (counts) {
             listOf(5) -> HandType.FiveOfAKind
