@@ -6,12 +6,16 @@ fun findFarthestDistanceFromStart(grid: Grid): Int {
     return getPipePositions(grid).size / 2
 }
 
-fun getPipePositions(grid: Grid): Set<GridPosition> {
-    val pipe: MutableSet<GridPosition> = mutableSetOf(grid.startingPosition())
+fun getPipePositions(grid: Grid): List<PipeSegment> {
+    val startingPosition = grid.startingPosition()
+    val pipe: MutableList<PipeSegment> = mutableListOf(PipeSegment(startingPosition))
 
     while (true) {
-        val previous = pipe.last()
-        val next = grid.connectedPositions(previous).firstOrNull() { !pipe.contains(it) }
+        val lastSegment = pipe.last()
+        val next =
+            grid.connectedPositions(lastSegment.position).filterNot { it.position == startingPosition }.firstOrNull {
+                it.joinedFrom?.opposite() != lastSegment.joinedFrom
+            }
         if (next != null) {
             pipe.add(next)
             continue
@@ -63,12 +67,17 @@ class Grid(private val inner: List<List<GridElement>>) : List<List<GridElement>>
         throw Exception("did not find starting position")
     }
 
-    fun connectedPositions(position: GridPosition, exclude: (GridPosition) -> Boolean = { false }): List<GridPosition> =
-        when (val element = at(position)) {
-            is GridElement.StartingPosition -> adjacentPipePositions(position)
-            is GridElement.Ground -> throw Exception("Ground cannot be connected")
-            is PipePiece -> listOf(adjacentBy(position, element.first), adjacentBy(position, element.second))
-        }.filterNot(exclude)
+    fun connectedPositions(
+        position: GridPosition
+    ): List<PipeSegment> = when (val element = at(position)) {
+        is GridElement.StartingPosition -> adjacentPipePositions(position)
+        is PipePiece -> listOf(
+            PipeSegment(adjacentBy(position, element.first), element.first.opposite()),
+            PipeSegment(adjacentBy(position, element.second), element.second.opposite())
+        )
+
+        else -> throw Exception("Grid element cannot be connected")
+    }
 
     private fun adjacentBy(position: GridPosition, direction: Direction): GridPosition = when (direction) {
         Direction.North -> position.copy(row = position.row - 1)
@@ -77,20 +86,19 @@ class Grid(private val inner: List<List<GridElement>>) : List<List<GridElement>>
         Direction.West -> position.copy(column = position.column - 1)
     }
 
-    private fun adjacentPipePositions(position: GridPosition): List<GridPosition> =
+    private fun adjacentPipePositions(position: GridPosition): List<PipeSegment> =
         listOf(Direction.North, Direction.East, Direction.South, Direction.West).map {
-            Pair(
-                it,
-                adjacentBy(position, it)
+            PipeSegment(
+                adjacentBy(position, it), it.opposite()
             )
-        }.filter { (direction, position) ->
+        }.filter { (position, direction) ->
             if (!containsPosition(position)) return@filter false
 
             val element = at(position)
             if (element !is PipePiece) return@filter false
 
-            element.connectsBy(direction.opposite())
-        }.map { (_, position) -> position }
+            element.connectsBy(direction!!)
+        }
 
 
     private fun at(position: GridPosition): GridElement = inner[position.row][position.column]
@@ -107,3 +115,5 @@ class Grid(private val inner: List<List<GridElement>>) : List<List<GridElement>>
 }
 
 data class GridPosition(val row: Int, val column: Int)
+
+data class PipeSegment(val position: GridPosition, val joinedFrom: Direction? = null)
