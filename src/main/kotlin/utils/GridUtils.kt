@@ -1,6 +1,14 @@
 package utils
 
-open class Grid2D<T>(val inner: List<List<T>>) {
+import kotlin.math.max
+import kotlin.math.min
+
+open class Grid2D<T>(inner: List<List<T>>) {
+
+    val inner: MutableList<MutableList<T>> = inner.map { row -> row.toMutableList() }.toMutableList()
+    private val height: Int get() = inner.size
+    private val width: Int get() = inner.firstOrNull()?.size ?: 0
+
     fun get(point: Grid2DPoint): T = inner[point.row][point.column]
 
     fun getOrNull(point: Grid2DPoint): T? = if (!contains(point)) {
@@ -10,29 +18,45 @@ open class Grid2D<T>(val inner: List<List<T>>) {
     }
 
     fun contains(point: Grid2DPoint): Boolean {
-        val height = inner.size
-        val width = inner.firstOrNull()?.size ?: 0
-
         return point.row in 0..<height && point.column in 0..<width
     }
 
-    fun orthogonalNeighbours(point: Grid2DPoint): List<Grid2DPoint> = listOf(
-        point.toThe(Grid2DDirection.North),
-        point.toThe(Grid2DDirection.East),
-        point.toThe(Grid2DDirection.South),
-        point.toThe(Grid2DDirection.West),
-    ).filter { contains(it) }
+    fun orthogonalNeighbours(point: Grid2DPoint): List<Grid2DPoint> =
+        point.orthogonallySurroundingPoints().filter { contains(it) }
 
-    fun neighbours(point: Grid2DPoint): List<Grid2DPoint> = listOf(
-        point.toThe(Grid2DDirection.North),
-        point.toThe(Grid2DDirection.NorthEast),
-        point.toThe(Grid2DDirection.East),
-        point.toThe(Grid2DDirection.SouthEast),
-        point.toThe(Grid2DDirection.South),
-        point.toThe(Grid2DDirection.SouthWest),
-        point.toThe(Grid2DDirection.West),
-        point.toThe(Grid2DDirection.NorthWest),
-    ).filter { contains(it) }
+    fun neighbours(point: Grid2DPoint): List<Grid2DPoint> = point.surroundingPoints().filter { contains(it) }
+
+    fun rowsAllMatching(matcher: (T) -> Boolean): List<Int> =
+        inner.withIndex().filter { (_, row) -> row.all { element -> matcher.invoke(element) } }
+            .map { (index, _) -> index }
+
+    fun columnsAllMatching(matcher: (T) -> Boolean): List<Int> = inner.fold(List(width) { true }) { columns, row ->
+        columns.zip(row).map { (matches, element) ->
+            matches && matcher.invoke(element)
+        }
+    }.withIndex().filter { (_, matches) -> matches }.map { (index, _) -> index }
+
+    fun elementsMatching(matcher: (T) -> Boolean): List<Grid2DPoint> = inner.mapIndexed { rowIndex, row ->
+        row.mapIndexedNotNull { columnIndex, element ->
+            if (matcher.invoke(element)) {
+                Grid2DPoint(rowIndex, columnIndex)
+            } else {
+                null
+            }
+        }
+    }.flatten()
+
+    fun duplicateRow(rowIndex: Int) {
+        val newRow = inner[rowIndex]
+        inner.add(rowIndex, newRow)
+    }
+
+    fun duplicateColumn(columnIndex: Int) {
+        inner.forEach { row ->
+            val newElement = row[columnIndex]
+            row.add(columnIndex, newElement)
+        }
+    }
 }
 
 enum class Grid2DDirection {
@@ -65,4 +89,28 @@ data class Grid2DPoint(val row: Int, val column: Int) {
             Grid2DDirection.NorthWest -> Grid2DPoint(row = row - 1, column = column - 1)
         }
     }
+
+    fun orthogonalDistanceTo(other: Grid2DPoint): Int {
+        val verticalDistance = max(row, other.row) - min(row, other.row)
+        val horizontalDistance = max(column, other.column) - min(column, other.column)
+        return verticalDistance + horizontalDistance
+    }
+
+    fun surroundingPoints(): List<Grid2DPoint> = listOf(
+        this.toThe(Grid2DDirection.North),
+        this.toThe(Grid2DDirection.NorthEast),
+        this.toThe(Grid2DDirection.East),
+        this.toThe(Grid2DDirection.SouthEast),
+        this.toThe(Grid2DDirection.South),
+        this.toThe(Grid2DDirection.SouthWest),
+        this.toThe(Grid2DDirection.West),
+        this.toThe(Grid2DDirection.NorthWest)
+    )
+
+    fun orthogonallySurroundingPoints(): List<Grid2DPoint> = listOf(
+        this.toThe(Grid2DDirection.North),
+        this.toThe(Grid2DDirection.East),
+        this.toThe(Grid2DDirection.South),
+        this.toThe(Grid2DDirection.West)
+    )
 }
