@@ -22,17 +22,32 @@ open class Grid2D<T>(val inner: List<List<T>>) {
         point.toThe(Grid2DDirection.South),
         point.toThe(Grid2DDirection.West),
     ).filter { contains(it) }
+
+    fun neighbours(point: Grid2DPoint): List<Grid2DPoint> = listOf(
+        point.toThe(Grid2DDirection.North),
+        point.toThe(Grid2DDirection.NorthEast),
+        point.toThe(Grid2DDirection.East),
+        point.toThe(Grid2DDirection.SouthEast),
+        point.toThe(Grid2DDirection.South),
+        point.toThe(Grid2DDirection.SouthWest),
+        point.toThe(Grid2DDirection.West),
+        point.toThe(Grid2DDirection.NorthWest),
+    ).filter { contains(it) }
 }
 
 enum class Grid2DDirection {
-    North, South, East, West;
+    North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest;
 
     fun opposite(): Grid2DDirection {
         return when (this) {
             North -> South
-            South -> North
+            NorthEast -> SouthWest
             East -> West
+            SouthEast -> NorthWest
+            South -> North
+            SouthWest -> NorthEast
             West -> East
+            NorthWest -> SouthEast
         }
     }
 }
@@ -44,6 +59,10 @@ data class Grid2DPoint(val row: Int, val column: Int) {
             Grid2DDirection.East -> this.copy(column = column + 1)
             Grid2DDirection.South -> this.copy(row = row + 1)
             Grid2DDirection.West -> this.copy(column = column - 1)
+            Grid2DDirection.NorthEast -> Grid2DPoint(row = row - 1, column = column + 1)
+            Grid2DDirection.SouthEast -> Grid2DPoint(row = row + 1, column = column + 1)
+            Grid2DDirection.SouthWest -> Grid2DPoint(row = row + 1, column = column - 1)
+            Grid2DDirection.NorthWest -> Grid2DPoint(row = row - 1, column = column - 1)
         }
     }
 }
