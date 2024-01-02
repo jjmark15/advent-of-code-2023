@@ -8,7 +8,7 @@ import com.github.h0tk3y.betterParse.grammar.tryParseToEnd
 import com.github.h0tk3y.betterParse.lexer.literalToken
 import com.github.h0tk3y.betterParse.lexer.regexToken
 import com.github.h0tk3y.betterParse.parser.toParsedOrThrow
-import lineGroups
+import utils.lineGroups
 
 fun parse(lines: List<String>): Pair<Instructions, NetworkMap> {
     val lineGroups = lines.lineGroups()

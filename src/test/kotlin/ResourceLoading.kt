@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import utils.lineGroups
 
 fun loadData(day: Int, modifier: String? = null): List<String> {
     val fileNameSuffix = modifier?.let { "_$it" }.orEmpty()

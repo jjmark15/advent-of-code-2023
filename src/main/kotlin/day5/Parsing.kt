@@ -1,6 +1,6 @@
 package day5
 
-import lineGroups
+import utils.lineGroups
 
 class Parser {
 
