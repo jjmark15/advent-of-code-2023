@@ -1,6 +1,6 @@
 package utils
 
-class Grid2D<T>(val inner: List<List<T>>) {
+open class Grid2D<T>(val inner: List<List<T>>) {
     fun get(point: Grid2DPoint): T = inner[point.row][point.column]
 
     fun getOrNull(point: Grid2DPoint): T? = if (!contains(point)) {
