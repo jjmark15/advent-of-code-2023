@@ -1,7 +1,9 @@
 package day10
 
-fun parse(lines: List<String>): Grid {
-    return Grid(lines.map { line ->
+import utils.Grid2D
+
+fun parse(lines: List<String>): Grid2D<GridElement> {
+    return Grid2D(lines.map { line ->
         line.split("").filter { it.isNotEmpty() }.map { character ->
             when (character) {
                 "." -> GridElement.Ground

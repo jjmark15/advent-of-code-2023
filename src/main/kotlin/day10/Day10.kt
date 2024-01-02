@@ -1,12 +1,16 @@
 package day10
 
-fun part1(input: Grid): Int = findFarthestDistanceFromStart(input)
+import utils.Grid2D
+import utils.Grid2DDirection
+import utils.Grid2DPoint
 
-fun findFarthestDistanceFromStart(grid: Grid): Int {
+fun part1(input: Grid2D<GridElement>): Int = findFarthestDistanceFromStart(input)
+
+fun findFarthestDistanceFromStart(grid: Grid2D<GridElement>): Int {
     return getPipePositions(grid).size / 2
 }
 
-fun getPipePositions(grid: Grid): List<PipeSegment> {
+fun getPipePositions(grid: Grid2D<GridElement>): List<PipeSegment> {
     val startingPosition = grid.startingPosition()
     val pipe: MutableList<PipeSegment> = mutableListOf(PipeSegment(startingPosition))
 
@@ -31,89 +35,52 @@ sealed interface GridElement {
     data object StartingPosition : GridElement
 }
 
-sealed class PipePiece(val first: Direction, val second: Direction) : GridElement {
-    data object Vertical : PipePiece(Direction.North, Direction.South)
-    data object Horizontal : PipePiece(Direction.East, Direction.West)
-    data object NorthEast : PipePiece(Direction.North, Direction.East)
-    data object NorthWest : PipePiece(Direction.North, Direction.West)
-    data object SouthWest : PipePiece(Direction.South, Direction.West)
-    data object SouthEast : PipePiece(Direction.South, Direction.East)
+sealed class PipePiece(val first: Grid2DDirection, val second: Grid2DDirection) : GridElement {
+    data object Vertical : PipePiece(Grid2DDirection.North, Grid2DDirection.South)
+    data object Horizontal : PipePiece(Grid2DDirection.East, Grid2DDirection.West)
+    data object NorthEast : PipePiece(Grid2DDirection.North, Grid2DDirection.East)
+    data object NorthWest : PipePiece(Grid2DDirection.North, Grid2DDirection.West)
+    data object SouthWest : PipePiece(Grid2DDirection.South, Grid2DDirection.West)
+    data object SouthEast : PipePiece(Grid2DDirection.South, Grid2DDirection.East)
 
-    fun connectsBy(direction: Direction): Boolean = direction == first || direction == second
+    fun connectsBy(direction: Grid2DDirection): Boolean = direction == first || direction == second
 }
 
-enum class Direction {
-    North, South, East, West;
-
-    fun opposite(): Direction {
-        return when (this) {
-            North -> South
-            South -> North
-            East -> West
-            West -> East
-        }
-    }
-}
-
-class Grid(private val inner: List<List<GridElement>>) : List<List<GridElement>> by inner {
-    fun startingPosition(): GridPosition {
-        for ((rowIndex, row) in this.withIndex()) {
-            for ((columnIndex, element) in row.withIndex()) {
-                if (element is GridElement.StartingPosition) {
-                    return GridPosition(rowIndex, columnIndex)
-                }
+fun Grid2D<GridElement>.startingPosition(): Grid2DPoint {
+    for ((rowIndex, row) in inner.withIndex()) {
+        for ((columnIndex, element) in row.withIndex()) {
+            if (element is GridElement.StartingPosition) {
+                return Grid2DPoint(rowIndex, columnIndex)
             }
         }
-        throw Exception("did not find starting position")
     }
-
-    fun connectedPositions(
-        position: GridPosition
-    ): List<PipeSegment> = when (val element = at(position)) {
-        is GridElement.StartingPosition -> adjacentPipePositions(position)
-        is PipePiece -> listOf(
-            PipeSegment(adjacentBy(position, element.first), element.first.opposite()),
-            PipeSegment(adjacentBy(position, element.second), element.second.opposite())
-        )
-
-        else -> throw Exception("Grid element cannot be connected")
-    }
-
-    private fun adjacentBy(position: GridPosition, direction: Direction): GridPosition = when (direction) {
-        Direction.North -> position.copy(row = position.row - 1)
-        Direction.South -> position.copy(row = position.row + 1)
-        Direction.East -> position.copy(column = position.column + 1)
-        Direction.West -> position.copy(column = position.column - 1)
-    }
-
-    private fun adjacentPipePositions(position: GridPosition): List<PipeSegment> =
-        listOf(Direction.North, Direction.East, Direction.South, Direction.West).map {
-            PipeSegment(
-                adjacentBy(position, it), it.opposite()
-            )
-        }.filter { (position, direction) ->
-            if (!containsPosition(position)) return@filter false
-
-            val element = at(position)
-            if (element !is PipePiece) return@filter false
-
-            element.connectsBy(direction!!)
-        }
-
-
-    private fun at(position: GridPosition): GridElement = inner[position.row][position.column]
-
-    private fun containsPosition(position: GridPosition): Boolean {
-        val height = inner.size
-        val width = if (height > 0) {
-            inner.first().size
-        } else {
-            0
-        }
-        return position.row in 0..<height && position.column in 0..<width
-    }
+    throw Exception("did not find starting position")
 }
 
-data class GridPosition(val row: Int, val column: Int)
+fun Grid2D<GridElement>.connectedPositions(
+    position: Grid2DPoint
+): List<PipeSegment> = when (val element = get(position)) {
+    is GridElement.StartingPosition -> adjacentPipePositions(position)
+    is PipePiece -> listOf(
+        PipeSegment(position.toThe(element.first), element.first.opposite()),
+        PipeSegment(position.toThe(element.second), element.second.opposite())
+    )
 
-data class PipeSegment(val position: GridPosition, val joinedFrom: Direction? = null)
+    else -> throw Exception("Grid element cannot be connected")
+}
+
+private fun Grid2D<GridElement>.adjacentPipePositions(position: Grid2DPoint): List<PipeSegment> =
+    listOf(Grid2DDirection.North, Grid2DDirection.East, Grid2DDirection.South, Grid2DDirection.West).map {
+        PipeSegment(
+            position.toThe(it), it.opposite()
+        )
+    }.filter { (position, direction) ->
+        if (!contains(position)) return@filter false
+
+        val element = get(position)
+        if (element !is PipePiece) return@filter false
+
+        element.connectsBy(direction!!)
+    }
+
+data class PipeSegment(val position: Grid2DPoint, val joinedFrom: Grid2DDirection? = null)
