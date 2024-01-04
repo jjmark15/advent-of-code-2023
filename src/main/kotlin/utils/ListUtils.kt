@@ -15,3 +15,6 @@ fun <T, U> List<List<T>>.map2D(convert: (T) -> U): List<List<U>> = this.map { ro
 fun List<String>.to2DCharacterMatrix(): List<List<String>> {
     return this.map { row -> row.split("").filter { it.isNotEmpty() } }
 }
+
+fun <T, L : Iterable<T>> L.cartesianProduct(): List<Pair<T, T>> =
+    this.flatMap { element -> this.map { Pair(element, it) } }

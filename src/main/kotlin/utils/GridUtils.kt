@@ -8,6 +8,8 @@ open class Grid2D<T>(inner: List<List<T>>) {
     val inner: MutableList<MutableList<T>> = inner.map { row -> row.toMutableList() }.toMutableList()
     private val height: Int get() = inner.size
     private val width: Int get() = inner.firstOrNull()?.size ?: 0
+    private val rowExpansionFactors: MutableMap<Int, Int> = mutableMapOf()
+    private val columnExpansionFactors: MutableMap<Int, Int> = mutableMapOf()
 
     fun get(point: Grid2DPoint): T = inner[point.row][point.column]
 
@@ -46,18 +48,29 @@ open class Grid2D<T>(inner: List<List<T>>) {
         }
     }.flatten()
 
-    fun duplicateRow(rowIndex: Int) {
-        val newRow = inner[rowIndex]
-        inner.add(rowIndex, newRow)
+    fun setRowExpansionFactor(rowIndex: Int, expansionFactor: Int) {
+        rowExpansionFactors[rowIndex] = expansionFactor
     }
 
-    fun duplicateColumn(columnIndex: Int) {
-        inner.forEach { row ->
-            val newElement = row[columnIndex]
-            row.add(columnIndex, newElement)
-        }
+    fun setColumnExpansionFactor(columnIndex: Int, expansionFactor: Int) {
+        columnExpansionFactors[columnIndex] = expansionFactor
+    }
+
+    private fun rowExpansionFactor(rowIndex: Int): Int = rowExpansionFactors.getOrDefault(rowIndex, 1)
+
+    private fun columnExpansionFactor(columnIndex: Int): Int = columnExpansionFactors.getOrDefault(columnIndex, 1)
+
+    fun orthogonalDistanceTo(point: Grid2DPoint, other: Grid2DPoint): Int {
+        val verticalDistance = ascendingNumberRange(point.row, other.row).sumOf { rowExpansionFactor(it) } - 1
+        val horizontalDistance =
+            ascendingNumberRange(point.column, other.column).sumOf { columnExpansionFactor(it) } - 1
+        return verticalDistance + horizontalDistance
     }
 }
+
+private fun ascendingNumberRange(a: Int, b: Int): IntRange = IntRange(
+    min(a, b), max(a, b)
+)
 
 sealed interface Grid2DDirection {
     data object NorthEast : Grid2DDirection
@@ -97,12 +110,6 @@ data class Grid2DPoint(val row: Int, val column: Int) {
             Grid2DDirection.SouthWest -> Grid2DPoint(row = row + 1, column = column - 1)
             Grid2DDirection.NorthWest -> Grid2DPoint(row = row - 1, column = column - 1)
         }
-    }
-
-    fun orthogonalDistanceTo(other: Grid2DPoint): Int {
-        val verticalDistance = max(row, other.row) - min(row, other.row)
-        val horizontalDistance = max(column, other.column) - min(column, other.column)
-        return verticalDistance + horizontalDistance
     }
 
     fun surroundingPoints(): List<Grid2DPoint> = listOf(
