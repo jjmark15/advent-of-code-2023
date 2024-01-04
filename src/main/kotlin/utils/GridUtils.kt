@@ -59,8 +59,15 @@ open class Grid2D<T>(inner: List<List<T>>) {
     }
 }
 
-enum class Grid2DDirection {
-    North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest;
+sealed interface Grid2DDirection {
+    data object NorthEast : Grid2DDirection
+    data object SouthEast : Grid2DDirection
+    data object SouthWest : Grid2DDirection
+    data object NorthWest : Grid2DDirection
+    data object North : OrthogonalGrid2DDirection
+    data object East : OrthogonalGrid2DDirection
+    data object South : OrthogonalGrid2DDirection
+    data object West : OrthogonalGrid2DDirection
 
     fun opposite(): Grid2DDirection {
         return when (this) {
@@ -74,6 +81,8 @@ enum class Grid2DDirection {
             NorthWest -> SouthEast
         }
     }
+
+    sealed interface OrthogonalGrid2DDirection : Grid2DDirection
 }
 
 data class Grid2DPoint(val row: Int, val column: Int) {
