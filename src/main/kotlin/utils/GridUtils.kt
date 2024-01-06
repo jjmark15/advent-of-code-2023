@@ -60,10 +60,10 @@ open class Grid2D<T>(inner: List<List<T>>) {
 
     private fun columnExpansionFactor(columnIndex: Int): Int = columnExpansionFactors.getOrDefault(columnIndex, 1)
 
-    fun orthogonalDistanceTo(point: Grid2DPoint, other: Grid2DPoint): Int {
-        val verticalDistance = ascendingNumberRange(point.row, other.row).sumOf { rowExpansionFactor(it) } - 1
+    fun orthogonalDistanceTo(point: Grid2DPoint, other: Grid2DPoint): Long {
+        val verticalDistance = ascendingNumberRange(point.row, other.row).sumOf { rowExpansionFactor(it).toLong() } - 1
         val horizontalDistance =
-            ascendingNumberRange(point.column, other.column).sumOf { columnExpansionFactor(it) } - 1
+            ascendingNumberRange(point.column, other.column).sumOf { columnExpansionFactor(it).toLong() } - 1
         return verticalDistance + horizontalDistance
     }
 }
