@@ -3,9 +3,7 @@ package utils
 import kotlin.math.max
 import kotlin.math.min
 
-open class Grid2D<T>(inner: List<List<T>>) {
-
-    val inner: MutableList<MutableList<T>> = inner.map { row -> row.toMutableList() }.toMutableList()
+open class Grid2D<T>(val inner: List<List<T>>) {
     private val height: Int get() = inner.size
     private val width: Int get() = inner.firstOrNull()?.size ?: 0
     private val rowExpansionFactors: MutableMap<Int, Int> = mutableMapOf()
