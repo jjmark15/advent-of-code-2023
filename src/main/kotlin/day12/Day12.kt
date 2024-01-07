@@ -5,6 +5,8 @@ import kotlin.math.min
 
 fun part1(input: List<SpringRow>): Int = input.sumOf { row -> row.countValidArrangements() }
 
+fun part2(input: List<SpringRow>): Int = input.map { it.unfold() }.sumOf { row -> row.countValidArrangements() }
+
 data class SpringRow(private val states: List<SpringState>, private val damagedSpringContiguousGroupSizes: List<Int>) {
     fun countValidArrangements(): Int {
         var count = 0
@@ -61,9 +63,16 @@ data class SpringRow(private val states: List<SpringState>, private val damagedS
             0, min(damagedSpringContiguousGroupSizes.size, discoveredDamageGroups.size)
         )
 
-        for ((expected, discovered) in expectedGroupsUpToIndex.zip(discoveredDamageGroups)) {
-            if (discovered > expected) return false
+        if (discoveredDamageGroups.isEmpty()) return true
+
+        if (expectedGroupsUpToIndex.take(expectedGroupsUpToIndex.size - 1) != discoveredDamageGroups.take(
+                discoveredDamageGroups.size - 1
+            )
+        ) {
+            return false
         }
+
+        if (expectedGroupsUpToIndex.last() < discoveredDamageGroups.last()) return false
 
         return true
     }
@@ -79,6 +88,28 @@ data class SpringRow(private val states: List<SpringState>, private val damagedS
         listOf(SpringState.Working, SpringState.Broken).filter { state ->
             this.copyWithStateAt(state, index).isValidUpToLastUnknown()
         }
+
+    fun unfold(): SpringRow {
+        val newStates: MutableList<SpringState> = mutableListOf()
+        newStates.addAll(states)
+        newStates.add(SpringState.Unknown)
+        newStates.addAll(states)
+        newStates.add(SpringState.Unknown)
+        newStates.addAll(states)
+        newStates.add(SpringState.Unknown)
+        newStates.addAll(states)
+        newStates.add(SpringState.Unknown)
+        newStates.addAll(states)
+
+        val newGroupSizes: MutableList<Int> = mutableListOf()
+        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
+        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
+        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
+        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
+        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
+
+        return SpringRow(newStates, newGroupSizes)
+    }
 }
 
 sealed interface SpringState {

@@ -16,5 +16,15 @@ class Day12Test {
         expectThat(part1(data("short"))) isEqualTo 21
     }
 
+    @Test
+    fun `part 2 long`() {
+        expectThat(part2(data())) isEqualTo 7622
+    }
+
+    @Test
+    fun `part 2 short`() {
+        expectThat(part2(data("short"))) isEqualTo 525152
+    }
+
     private fun data(modifier: String? = null) = parse(loadData(12, modifier))
 }
