@@ -3,9 +3,7 @@ package day12
 import utils.contiguousGroupsMatching
 import kotlin.math.min
 
-fun part1(input: List<SpringRow>): Int {
-    return input.sumOf { row -> row.countValidArrangements() }
-}
+fun part1(input: List<SpringRow>): Int = input.sumOf { row -> row.countValidArrangements() }
 
 data class SpringRow(private val states: List<SpringState>, private val damagedSpringContiguousGroupSizes: List<Int>) {
     fun countValidArrangements(): Int {
@@ -35,9 +33,8 @@ data class SpringRow(private val states: List<SpringState>, private val damagedS
         return count
     }
 
-    private fun copyWithStateAt(state: SpringState, index: Int): SpringRow {
-        return this.copy(states = states.toMutableList().also { it[index] = state })
-    }
+    private fun copyWithStateAt(state: SpringState, index: Int): SpringRow =
+        this.copy(states = states.toMutableList().also { it[index] = state })
 
     private fun isValidUpToLastUnknown(): Boolean {
         val allStatesKnown: Boolean = !states.contains(SpringState.Unknown)
@@ -53,6 +50,8 @@ data class SpringRow(private val states: List<SpringState>, private val damagedS
         val discoveredDamageGroups: List<Int> = states.subList(0, targetIndex + 1).contiguousGroupsMatching { state ->
             state == SpringState.Broken
         }.map { it.size }
+
+        if (discoveredDamageGroups.size > damagedSpringContiguousGroupSizes.size) return false
 
         if (allStatesKnown) {
             return damagedSpringContiguousGroupSizes == discoveredDamageGroups
