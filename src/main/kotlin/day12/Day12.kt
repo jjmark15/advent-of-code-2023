@@ -3,64 +3,78 @@ package day12
 import utils.contiguousGroupsMatching
 import kotlin.math.min
 
-fun part1(input: List<SpringRow>): Int = input.sumOf { row -> row.countValidArrangements() }
+fun part1(input: List<SpringRow>): Int = input.sumOf { row -> ArrangementCounter().count(row) }
 
-fun part2(input: List<SpringRow>): Int = input.map { it.unfold() }.sumOf { row -> row.countValidArrangements() }
+fun part2(input: List<SpringRow>): Int = input.map { it.unfold() }.sumOf { row -> ArrangementCounter().count(row) }
 
-data class SpringRow(private val states: List<SpringState>, private val damagedSpringContiguousGroupSizes: List<Int>) {
-    fun countValidArrangements(): Int {
+data class SpringRow(val states: List<SpringState>, val damagedSpringContiguousGroupSizes: List<Int>) {
+    fun copyWithStateAt(state: SpringState, index: Int): SpringRow =
+        this.copy(states = states.toMutableList().also { it[index] = state })
+
+    fun isAllKnown(): Boolean = !states.contains(SpringState.Unknown)
+
+    fun unfold(): SpringRow = SpringRow(mutableListOf<SpringState>().also {
+        it.addAll(states)
+        it.add(SpringState.Unknown)
+        it.addAll(states)
+        it.add(SpringState.Unknown)
+        it.addAll(states)
+        it.add(SpringState.Unknown)
+        it.addAll(states)
+        it.add(SpringState.Unknown)
+        it.addAll(states)
+    }, mutableListOf<Int>().also {
+        it.addAll(damagedSpringContiguousGroupSizes)
+        it.addAll(damagedSpringContiguousGroupSizes)
+        it.addAll(damagedSpringContiguousGroupSizes)
+        it.addAll(damagedSpringContiguousGroupSizes)
+        it.addAll(damagedSpringContiguousGroupSizes)
+    })
+}
+
+class ArrangementCounter {
+    fun count(row: SpringRow): Int {
         var count = 0
-
-        val unknownStateIndexes = unknownStateIndexes()
-
-        val arrangementQueue: MutableList<Pair<SpringRow, Int>> = mutableListOf()
-        arrangementQueue.add(Pair(this, 0))
+        val arrangementQueue: MutableList<SpringRow> = mutableListOf<SpringRow>().also { it.add(row) }
 
         while (arrangementQueue.size > 0) {
-            val (row, nextUnknownStateIndexIndex) = arrangementQueue.removeFirst()
-            val unknownStateIndex = unknownStateIndexes[nextUnknownStateIndexIndex]
-
-            val validStatesAt = row.validStatesAt(unknownStateIndex)
-            val newArrangements = validStatesAt.map { state ->
-                row.copyWithStateAt(state, unknownStateIndex)
-            }.map { newRow -> Pair(newRow, nextUnknownStateIndexIndex + 1) }
-
-            if (nextUnknownStateIndexIndex == unknownStateIndexes.size - 1) {
-                count += newArrangements.size
-            } else {
-                arrangementQueue.addAll(newArrangements)
-            }
+            potentialArrangementsForNextUnknown(arrangementQueue.removeFirst()).filter { this.isValidUpToLastUnknown(it) }
+                .forEach { newArrangement ->
+                    if (newArrangement.isAllKnown()) {
+                        count += 1
+                    } else {
+                        arrangementQueue.add(newArrangement)
+                    }
+                }
         }
 
         return count
     }
 
-    private fun copyWithStateAt(state: SpringState, index: Int): SpringRow =
-        this.copy(states = states.toMutableList().also { it[index] = state })
-
-    private fun isValidUpToLastUnknown(): Boolean {
-        val allStatesKnown: Boolean = !states.contains(SpringState.Unknown)
+    private fun isValidUpToLastUnknown(row: SpringRow): Boolean {
+        val allStatesKnown: Boolean = row.isAllKnown()
 
         val targetIndex = if (allStatesKnown) {
-            states.size - 1
+            row.states.size - 1
         } else {
-            states.indexOfFirst { it == SpringState.Unknown } - 1
+            indexOfLastKnown(row)
         }
 
         if (targetIndex == -1) return true
 
-        val discoveredDamageGroups: List<Int> = states.subList(0, targetIndex + 1).contiguousGroupsMatching { state ->
-            state == SpringState.Broken
-        }.map { it.size }
+        val discoveredDamageGroups: List<Int> =
+            row.states.subList(0, targetIndex + 1).contiguousGroupsMatching { state ->
+                state == SpringState.Broken
+            }.map { it.size }
 
-        if (discoveredDamageGroups.size > damagedSpringContiguousGroupSizes.size) return false
+        if (discoveredDamageGroups.size > row.damagedSpringContiguousGroupSizes.size) return false
 
         if (allStatesKnown) {
-            return damagedSpringContiguousGroupSizes == discoveredDamageGroups
+            return row.damagedSpringContiguousGroupSizes == discoveredDamageGroups
         }
 
-        val expectedGroupsUpToIndex = damagedSpringContiguousGroupSizes.subList(
-            0, min(damagedSpringContiguousGroupSizes.size, discoveredDamageGroups.size)
+        val expectedGroupsUpToIndex = row.damagedSpringContiguousGroupSizes.subList(
+            0, min(row.damagedSpringContiguousGroupSizes.size, discoveredDamageGroups.size)
         )
 
         if (discoveredDamageGroups.isEmpty()) return true
@@ -77,39 +91,16 @@ data class SpringRow(private val states: List<SpringState>, private val damagedS
         return true
     }
 
-    private fun unknownStateIndexes(): List<Int> = states.mapIndexedNotNull { index, state ->
-        when (state) {
-            SpringState.Unknown -> index
-            else -> null
-        }
+    private fun indexOfLastKnown(row: SpringRow): Int {
+        return row.states.indexOfFirst { it == SpringState.Unknown } - 1
     }
 
-    private fun validStatesAt(index: Int): List<SpringState> =
-        listOf(SpringState.Working, SpringState.Broken).filter { state ->
-            this.copyWithStateAt(state, index).isValidUpToLastUnknown()
-        }
-
-    fun unfold(): SpringRow {
-        val newStates: MutableList<SpringState> = mutableListOf()
-        newStates.addAll(states)
-        newStates.add(SpringState.Unknown)
-        newStates.addAll(states)
-        newStates.add(SpringState.Unknown)
-        newStates.addAll(states)
-        newStates.add(SpringState.Unknown)
-        newStates.addAll(states)
-        newStates.add(SpringState.Unknown)
-        newStates.addAll(states)
-
-        val newGroupSizes: MutableList<Int> = mutableListOf()
-        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
-        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
-        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
-        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
-        newGroupSizes.addAll(damagedSpringContiguousGroupSizes)
-
-        return SpringRow(newStates, newGroupSizes)
-    }
+    private fun potentialArrangementsForNextUnknown(row: SpringRow): List<SpringRow> =
+        row.states.withIndex().firstOrNull { (_, state) -> state == SpringState.Unknown }?.index?.let {
+            listOf(SpringState.Working, SpringState.Broken).map { state ->
+                row.copyWithStateAt(state, it)
+            }
+        } ?: listOf()
 }
 
 sealed interface SpringState {
