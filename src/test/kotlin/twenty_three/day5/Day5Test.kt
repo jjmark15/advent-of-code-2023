@@ -6,6 +6,8 @@ import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 
 class Day5Test {
+    private val parser: ParserV2 = ParserV2()
+
     @Test
     fun `part 1 long`() {
         val (seeds, mappings) = Parser.parsePart1(data())
@@ -14,7 +16,7 @@ class Day5Test {
 
     @Test
     fun `part 1 short`() {
-        val (seeds, mappings) = Parser.parsePart1(shortData())
+        val (seeds, mappings) = parser.parsePart1(shortData())
         expectThat(part1(seeds, mappings)) isEqualTo 35
     }
 
