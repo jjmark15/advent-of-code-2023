@@ -13,7 +13,7 @@ class InputParser {
     private val number: Parser<Long> = oneOrMore(Tokens.digit).map { it.joinToString("").toLong() }
     private val line: Parser<Pair<Long, Long>> = inOrder(number, spaces, number).map { Pair(it.first, it.third) }
 
-    fun parsePart1(lines: List<String>): LocationIds =
+    fun parse(lines: List<String>): LocationIds =
         lines.map { it.parseWith(line) }.fold(Pair(mutableListOf<Long>(), mutableListOf<Long>())) { acc, line ->
             acc.first.add(line.first)
             acc.second.add(line.second)
