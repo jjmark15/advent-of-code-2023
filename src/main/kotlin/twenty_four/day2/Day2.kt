@@ -4,22 +4,19 @@ import kotlin.math.absoluteValue
 
 fun part1(input: List<List<Long>>): Long = input.count { isSafe(it) }.toLong()
 
-private fun isSafe(report: List<Long>): Boolean = report.windowed(2, 1, false).fold(State(null)) { state, window ->
-    if (!state.safe) return@fold state
+private fun isSafe(report: List<Long>): Boolean {
+    report.windowed(2, 1, false).fold(State(null)) { state, window ->
+        val previous = window[0]
+        val current = window[1]
+        val newDirection: Direction = toDirection(previous, current)
+        val difference = (current - previous).absoluteValue
 
-    val previous = window[0]
-    val current = window[1]
-    val newDirection: Direction = toDirection(previous, current)
-    val difference = (current - previous).absoluteValue
+        if (newDirection == Direction.Unknown || (difference < 1 || difference > 3) || (state.direction != null && newDirection != state.direction)) return false
 
-    if (newDirection == Direction.Unknown) return@fold state.copy(safe = false)
-    if (difference < 1 || difference > 3) return@fold state.copy(safe = false)
-    if (state.direction != null && newDirection != state.direction) {
-        return@fold state.copy(safe = false)
+        return@fold state.copy(direction = newDirection)
     }
-
-    return@fold state.copy(direction = newDirection)
-}.safe
+    return true
+}
 
 fun part2(input: List<List<Long>>): Long = input.count { isSafeWithDampener(it) }.toLong()
 
@@ -35,7 +32,7 @@ private fun toDirection(previous: Long, current: Long): Direction {
     return Direction.Descending
 }
 
-private data class State(val direction: Direction?, val safe: Boolean = true)
+private data class State(val direction: Direction?)
 
 private enum class Direction {
     Ascending, Descending, Unknown
