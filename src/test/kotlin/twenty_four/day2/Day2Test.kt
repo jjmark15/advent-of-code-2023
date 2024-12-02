@@ -18,6 +18,28 @@ class Day2Test {
         assertThat(part1(parser.parse(shortData()))).isEqualTo(2)
     }
 
+    @Test
+    fun `part 2 long`() {
+        assertThat(part2(parser.parse(data()))).isEqualTo(398)
+    }
+
+    @Test
+    fun `part 2 short`() {
+        assertThat(part2(parser.parse(shortData()))).isEqualTo(4)
+    }
+
+    @Test
+    fun `part 2 short breakdown`() {
+        val shortData = parser.parse(shortData())
+
+        assertThat(part2(listOf(shortData[0]))).isEqualTo(1)
+        assertThat(part2(listOf(shortData[1]))).isEqualTo(0)
+        assertThat(part2(listOf(shortData[2]))).isEqualTo(0)
+        assertThat(part2(listOf(shortData[3]))).isEqualTo(1)
+        assertThat(part2(listOf(shortData[4]))).isEqualTo(1)
+        assertThat(part2(listOf(shortData[5]))).isEqualTo(1)
+    }
+
     private fun data(modifier: String? = null) = loadData(2024, 2, modifier)
 
     private fun shortData() = data("short")
