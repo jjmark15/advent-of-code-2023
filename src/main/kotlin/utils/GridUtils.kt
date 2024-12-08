@@ -1,5 +1,6 @@
 package utils
 
+import java.util.function.Function
 import kotlin.math.max
 import kotlin.math.min
 
@@ -63,6 +64,25 @@ open class Grid2D<T>(val inner: List<List<T>>) {
         val horizontalDistance =
             ascendingNumberRange(point.column, other.column).sumOf { columnExpansionFactor(it).toLong() } - 1
         return verticalDistance + horizontalDistance
+    }
+
+    fun <R> mapPoints(mapper: Function<Grid2DPoint, R>): List<R> =
+        inner.flatMapIndexed { rowIndex: Int, cells: List<T> ->
+            List(cells.size) { columnIndex ->
+                Grid2DPoint(
+                    rowIndex, columnIndex
+                )
+            }
+        }.map { point -> mapper.apply(point) }
+
+    fun cellsInDirection(from: Grid2DPoint, count: Int, direction: Grid2DDirection): List<Grid2DPoint> {
+        val cells = mutableListOf(from)
+
+        for (i in 1 until count) {
+            cells.add(cells.last().toThe(direction))
+        }
+
+        return cells
     }
 }
 
