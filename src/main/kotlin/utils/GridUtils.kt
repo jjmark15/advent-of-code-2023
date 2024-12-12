@@ -84,6 +84,10 @@ open class Grid2D<T>(val inner: List<List<T>>) {
 
         return cells
     }
+
+    fun isOnEdge(point: Grid2DPoint): Boolean {
+        return point.row == 0 || point.row == height - 1 || point.column == 0 || point.column == width - 1
+    }
 }
 
 private fun ascendingNumberRange(a: Int, b: Int): IntRange = IntRange(
@@ -100,17 +104,23 @@ sealed interface Grid2DDirection {
     data object South : OrthogonalGrid2DDirection
     data object West : OrthogonalGrid2DDirection
 
-    fun opposite(): Grid2DDirection {
-        return when (this) {
-            North -> South
-            NorthEast -> SouthWest
-            East -> West
-            SouthEast -> NorthWest
-            South -> North
-            SouthWest -> NorthEast
-            West -> East
-            NorthWest -> SouthEast
-        }
+    fun opposite(): Grid2DDirection = when (this) {
+        North -> South
+        NorthEast -> SouthWest
+        East -> West
+        SouthEast -> NorthWest
+        South -> North
+        SouthWest -> NorthEast
+        West -> East
+        NorthWest -> SouthEast
+    }
+
+    fun right90(): Grid2DDirection = when (this) {
+        North -> East
+        East -> South
+        South -> West
+        West -> North
+        else -> TODO()
     }
 
     sealed interface OrthogonalGrid2DDirection : Grid2DDirection
