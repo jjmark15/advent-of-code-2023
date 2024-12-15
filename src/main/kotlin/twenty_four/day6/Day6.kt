@@ -1,13 +1,22 @@
 package twenty_four.day6
 
+import utils.DebugDisplay
 import utils.Grid2D
 import utils.Grid2DDirection
 import utils.Grid2DPoint
 
-sealed interface MapElement {
+sealed interface MapElement: DebugDisplay {
     data object Empty : MapElement
     data object Obstacle : MapElement
     data class StartingPosition(val direction: Grid2DDirection) : MapElement
+
+    override fun display(): String {
+        return when (this) {
+            is StartingPosition -> "^"
+            Empty -> "."
+            Obstacle -> "#"
+        }
+    }
 }
 
 data class GuardPosition(val position: Grid2DPoint, val direction: Grid2DDirection)

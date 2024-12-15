@@ -90,6 +90,10 @@ open class Grid2D<T>(val inner: List<List<T>>) {
     }
 }
 
+fun <T: DebugDisplay> Grid2D<T>.debugDisplay(): String {
+    return inner.joinToString("\n") { it.joinToString("") { element -> element.display() } }
+}
+
 private fun ascendingNumberRange(a: Int, b: Int): IntRange = IntRange(
     min(a, b), max(a, b)
 )
