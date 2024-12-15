@@ -4,7 +4,8 @@ import java.util.function.Function
 import kotlin.math.max
 import kotlin.math.min
 
-open class Grid2D<T>(val inner: List<List<T>>) {
+open class Grid2D<T>(cells: List<List<T>>) {
+    val inner: MutableList<MutableList<T>> = cells.map { row -> row.toMutableList() }.toMutableList()
     private val height: Int get() = inner.size
     private val width: Int get() = inner.firstOrNull()?.size ?: 0
     private val rowExpansionFactors: MutableMap<Int, Int> = mutableMapOf()
@@ -16,6 +17,12 @@ open class Grid2D<T>(val inner: List<List<T>>) {
         null
     } else {
         get(point)
+    }
+
+    fun copyWith(point: Grid2DPoint, modifier: Function<T, T>): Grid2D<T> {
+        val newInner = inner.map { row -> row.toMutableList() }
+        newInner[point.row][point.column] = modifier.apply(newInner[point.row][point.column])
+        return Grid2D(newInner.map { row -> row.toList() })
     }
 
     fun contains(point: Grid2DPoint): Boolean {
@@ -88,11 +95,14 @@ open class Grid2D<T>(val inner: List<List<T>>) {
     fun isOnEdge(point: Grid2DPoint): Boolean {
         return point.row == 0 || point.row == height - 1 || point.column == 0 || point.column == width - 1
     }
+
+    fun setPoint(position: Grid2DPoint, value: T) {
+        inner[position.row][position.column] = value
+    }
 }
 
-fun <T: DebugDisplay> Grid2D<T>.debugDisplay(): String {
-    return inner.joinToString("\n") { it.joinToString("") { element -> element.display() } }
-}
+fun <T> Grid2D<T>.debugDisplay(valueDisplay: Function<T, String>): String =
+    inner.joinToString("\n") { it.joinToString("", transform = valueDisplay::apply) }
 
 private fun ascendingNumberRange(a: Int, b: Int): IntRange = IntRange(
     min(a, b), max(a, b)
