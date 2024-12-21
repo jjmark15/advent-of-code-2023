@@ -1,5 +1,7 @@
 package twenty_four.day9
 
+import utils.indexOfOrNull
+
 class DiskMap(indicators: List<DiskMapIndicator>) {
     val indicators: List<DiskMapIndicator> = indicators.fold(
         Pair<MutableList<DiskMapIndicator>, Int>(
@@ -26,7 +28,7 @@ class DiskMap(indicators: List<DiskMapIndicator>) {
 private class ExpandedDiskMap(fileBlocks: List<Int?>) {
     private val fileBlocks = fileBlocks.toMutableList()
 
-    fun compactFiles() {
+    fun compactFileBlocks() {
         var endCursor = fileBlocks.size - 1
 
         while (endCursor > fileBlocks.indexOf(null)) {
@@ -38,6 +40,38 @@ private class ExpandedDiskMap(fileBlocks: List<Int?>) {
             }
             endCursor--
         }
+    }
+
+    fun compactFiles() {
+        val fileIds = fileBlocks.filterNotNull().toSortedSet().reversed()
+
+        for (fileId in fileIds) {
+            val startingIndex = fileBlocks.indexOf(fileId)
+            val endIndex = fileBlocks.lastIndexOf(fileId)
+            val firstEmptySpaceIndex = fileBlocks.indexOf(null)
+            if (startingIndex < firstEmptySpaceIndex) continue
+            val fileSize = endIndex - startingIndex + 1
+
+            val availableSpaceStartIndex = nextEmptyWindowStartIndexOfSizeUpTo(fileSize, startingIndex)
+
+            if (availableSpaceStartIndex != null) {
+                (startingIndex..endIndex).forEach { index -> fileBlocks[index] = null }
+                val availableSpaceEndIndex = availableSpaceStartIndex + fileSize - 1
+                (availableSpaceStartIndex..availableSpaceEndIndex).forEach { index -> fileBlocks[index] = fileId }
+            }
+        }
+    }
+
+    private fun nextEmptyWindowStartIndexOfSizeUpTo(size: Int, upToIndex: Int): Int? {
+        var startIndex = 0
+        while (startIndex + size - 1 < upToIndex) {
+            val emptySpaceIndex = fileBlocks.subList(startIndex, upToIndex).indexOfOrNull(null)?.let { it + startIndex }
+            if (emptySpaceIndex == null) return null
+            val potentialSpace = fileBlocks.subList(emptySpaceIndex, upToIndex).take(size).takeWhile { it == null }
+            if (potentialSpace.size >= size) return emptySpaceIndex
+            startIndex = emptySpaceIndex + potentialSpace.indexOfOrNull(null)!! + 1
+        }
+        return null
     }
 
     fun checksum(): Long = fileBlocks.mapIndexed { index, id ->
@@ -63,4 +97,6 @@ sealed interface DiskMapIndicator {
     data class FreeSpaceLength(val length: Int) : DiskMapIndicator
 }
 
-fun part1(diskMap: DiskMap): Long = diskMap.expand().also { it.compactFiles() }.checksum()
+fun part1(diskMap: DiskMap): Long = diskMap.expand().also { it.compactFileBlocks() }.checksum()
+
+fun part2(diskMap: DiskMap): Long = diskMap.expand().also { it.compactFiles() }.checksum()

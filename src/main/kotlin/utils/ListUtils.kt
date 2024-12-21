@@ -22,3 +22,5 @@ fun <T> Iterable<T>.contiguousGroupsMatching(matcher: (T) -> Boolean): List<List
         }
         acc
     }.filter { it.isNotEmpty() }
+
+fun <T> List<T>.indexOfOrNull(value: T): Int? = indexOf(value).takeIf { it != -1 }
