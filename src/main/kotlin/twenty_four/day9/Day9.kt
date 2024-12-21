@@ -1,6 +1,27 @@
 package twenty_four.day9
 
-data class DiskMap(val indicators: List<DiskMapIndicator>)
+class DiskMap(indicators: List<DiskMapIndicator>) {
+    val indicators: List<DiskMapIndicator> = indicators.fold(
+        Pair<MutableList<DiskMapIndicator>, Int>(
+            mutableListOf(), 0
+        )
+    ) { (indicators, index), indicator ->
+        val (newIndicator, newId) = when (indicator) {
+            is DiskMapIndicator.FileLength -> Pair(
+                DiskMapIndicator.FileLengthWithId(
+                    indicator.length, index
+                ), index + 1
+            )
+
+            is DiskMapIndicator.FreeSpaceLength -> Pair(indicator, index)
+            else -> TODO()
+        }
+
+        indicators.add(newIndicator)
+
+        Pair(indicators, newId)
+    }.first.toList()
+}
 
 private class ExpandedDiskMap(fileBlocks: List<Int?>) {
     private val fileBlocks = fileBlocks.toMutableList()
@@ -28,20 +49,17 @@ private class ExpandedDiskMap(fileBlocks: List<Int?>) {
     }.sum()
 }
 
-private fun DiskMap.expand(): ExpandedDiskMap =
-    indicators.fold(Pair<MutableList<Int?>, Int>(mutableListOf(), 0)) { (fileBlocks, id), indicator ->
-        val p: Pair<List<Int?>, Int> = when (indicator) {
-            is DiskMapIndicator.FileLength -> Pair((0..<indicator.length).map { id }, id + 1)
-            is DiskMapIndicator.FreeSpaceLength -> Pair((0..<indicator.length).map { null }, id)
-        }
-
-        fileBlocks.addAll(p.first)
-
-        Pair(fileBlocks, p.second)
-    }.let { ExpandedDiskMap(it.first.toList()) }
+private fun DiskMap.expand(): ExpandedDiskMap = indicators.flatMap { indicator ->
+    when (indicator) {
+        is DiskMapIndicator.FileLengthWithId -> (0..<indicator.length).map { indicator.id }
+        is DiskMapIndicator.FreeSpaceLength -> (0..<indicator.length).map { null }
+        else -> TODO()
+    }
+}.let { ExpandedDiskMap(it) }
 
 sealed interface DiskMapIndicator {
     data class FileLength(val length: Int) : DiskMapIndicator
+    data class FileLengthWithId(val length: Int, val id: Int) : DiskMapIndicator
     data class FreeSpaceLength(val length: Int) : DiskMapIndicator
 }
 
