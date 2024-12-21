@@ -43,13 +43,11 @@ private class ExpandedDiskMap(fileBlocks: List<Int?>) {
     }
 
     fun compactFiles() {
-        val fileIds = fileBlocks.filterNotNull().toSortedSet().reversed()
+        val fileIds = (0..fileBlocks.maxBy { it ?: 0 }!!).reversed()
 
         for (fileId in fileIds) {
             val startingIndex = fileBlocks.indexOf(fileId)
             val endIndex = fileBlocks.lastIndexOf(fileId)
-            val firstEmptySpaceIndex = fileBlocks.indexOf(null)
-            if (startingIndex < firstEmptySpaceIndex) continue
             val fileSize = endIndex - startingIndex + 1
 
             val availableSpaceStartIndex = nextEmptyWindowStartIndexOfSizeUpTo(fileSize, startingIndex)
@@ -75,11 +73,7 @@ private class ExpandedDiskMap(fileBlocks: List<Int?>) {
     }
 
     fun checksum(): Long = fileBlocks.mapIndexed { index, id ->
-        if (id == null) {
-            0
-        } else {
-            index.toLong() * id.toLong()
-        }
+        id?.let { it * index.toLong() } ?: 0
     }.sum()
 }
 
