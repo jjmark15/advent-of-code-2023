@@ -1,6 +1,8 @@
 package utils
 
+import java.util.function.BiFunction
 import java.util.function.Function
+import java.util.function.Predicate
 import kotlin.math.max
 import kotlin.math.min
 
@@ -81,6 +83,19 @@ open class Grid2D<T>(cells: List<List<T>>) {
                 )
             }
         }.map { point -> mapper.apply(point) }
+
+    fun <R> map(mapper: Function<T, R>): List<List<R>> = inner.map2D { mapper.apply(it) }
+
+    fun <R> mapIndexed(mapper: BiFunction<Grid2DPoint, T, R>): List<List<R>> = inner.mapIndexed { rowIndex, row ->
+        row.mapIndexed { columnIndex, value -> mapper.apply(Grid2DPoint(rowIndex, columnIndex), value) }
+    }
+
+    fun <R> mapIndexedNotNull(mapper: BiFunction<Grid2DPoint, T, R?>): List<List<R>> =
+        inner.mapIndexed { rowIndex, row ->
+            row.mapIndexedNotNull() { columnIndex, value -> mapper.apply(Grid2DPoint(rowIndex, columnIndex), value) }
+        }
+
+    fun count(predicate: Predicate<T>): Int = inner.sumOf { row -> row.count { predicate.test(it) } }
 
     fun cellsInDirection(from: Grid2DPoint, count: Int, direction: Grid2DDirection): List<Grid2DPoint> {
         val cells = mutableListOf(from)
