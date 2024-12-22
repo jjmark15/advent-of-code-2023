@@ -18,6 +18,11 @@ class Day11Test {
         assertThat(part1(parser.parse(shortData()))).isEqualTo(55312)
     }
 
+    @Test
+    fun `part 2 long`() {
+        assertThat(part2(parser.parse(data()))).isEqualTo(239321955280205)
+    }
+
     private fun data(modifier: String? = null) = loadData(2024, 11, modifier)
 
     private fun shortData() = data("short")
