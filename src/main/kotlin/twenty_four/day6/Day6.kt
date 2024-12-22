@@ -5,16 +5,15 @@ import twenty_four.day6.MapElement.GuardPath
 import twenty_four.day6.MapElement.IntentionalObstacle
 import twenty_four.day6.MapElement.Obstacle
 import twenty_four.day6.MapElement.StartingPosition
-import utils.Grid2D
-import utils.Grid2DDirection
-import utils.Grid2DPoint
-import utils.debugDisplay
+import utils.grids.twodee.Grid2D
+import utils.grids.twodee.Direction2D
+import utils.grids.twodee.Point2D
 
 sealed interface MapElement {
     data object Empty : MapElement
     data object Obstacle : MapElement
     data object IntentionalObstacle : MapElement
-    data class StartingPosition(val direction: Grid2DDirection.CardinalGrid2DDirection) : MapElement
+    data class StartingPosition(val direction: Direction2D.CardinalDirection2D) : MapElement
     data class GuardPath(val direction: PathDirection) : MapElement
 
     enum class PathDirection {
@@ -29,10 +28,10 @@ fun debugMap(map: Grid2D<MapElement>) {
     println(map.debugDisplay { element ->
         when (element) {
             is StartingPosition -> when (element.direction) {
-                Grid2DDirection.East -> ">"
-                Grid2DDirection.North -> "^"
-                Grid2DDirection.South -> "v"
-                Grid2DDirection.West -> "<"
+                Direction2D.East -> ">"
+                Direction2D.North -> "^"
+                Direction2D.South -> "v"
+                Direction2D.West -> "<"
             }
 
             Empty -> "."
@@ -47,8 +46,8 @@ fun debugMap(map: Grid2D<MapElement>) {
     })
 }
 
-data class GuardPosition(val position: Grid2DPoint, val direction: Grid2DDirection) {
-    fun ahead(): Grid2DPoint = position.toThe(direction)
+data class GuardPosition(val position: Point2D, val direction: Direction2D) {
+    fun ahead(): Point2D = position.toThe(direction)
 
     fun turned90(): GuardPosition = GuardPosition(position, direction.right90())
 }
@@ -69,7 +68,7 @@ fun part1(input: Grid2D<MapElement>): Int {
 fun part2(map: Grid2D<MapElement>): Int {
     var currentPosition = getStartingPosition(map)
     val visitedPositions = mutableSetOf(currentPosition)
-    val obstaclePoints = mutableSetOf<Grid2DPoint>()
+    val obstaclePoints = mutableSetOf<Point2D>()
 
     while (!map.isOnEdge(currentPosition.position)) {
         val nextPosition = nextPosition(map, currentPosition)
@@ -94,7 +93,7 @@ fun updateMapMarkings(map: Grid2D<MapElement>, current: GuardPosition, next: Gua
     }
     if (current.direction != next.direction) {
         direction = MapElement.PathDirection.Change
-    } else if (current.direction == Grid2DDirection.North || current.direction == Grid2DDirection.South) {
+    } else if (current.direction == Direction2D.North || current.direction == Direction2D.South) {
         direction = MapElement.PathDirection.Vertical
     }
     map.setPoint(current.position, GuardPath(direction))

@@ -1,17 +1,17 @@
-package utils
+package utils.grids.twodee
 
 import java.util.function.BiFunction
 import java.util.function.Predicate
 
-class MapTraverser<T>(
-    private val map: Grid2D<T>, private val nextPointFactory: BiFunction<Grid2D<T>, Grid2DPoint, List<Grid2DPoint>>
+class Grid2DTraverser<T>(
+    private val map: Grid2D<T>, private val nextPointFactory: BiFunction<Grid2D<T>, Point2D, List<Point2D>>
 ) {
     fun breadthFirstSearch(
-        from: Grid2DPoint, destinationMatcher: Predicate<T>, uniquePaths: Boolean = true
-    ): List<Grid2DPoint> {
-        val visitedPlaces = mutableSetOf<Grid2DPoint>()
-        val placesToVisit = mutableListOf<Grid2DPoint>(from)
-        val reachableDestinations = mutableListOf<Grid2DPoint>()
+        from: Point2D, destinationMatcher: Predicate<T>, uniquePaths: Boolean = true
+    ): List<Point2D> {
+        val visitedPlaces = mutableSetOf<Point2D>()
+        val placesToVisit = mutableListOf<Point2D>(from)
+        val reachableDestinations = mutableListOf<Point2D>()
 
         while (placesToVisit.isNotEmpty()) {
             val place = placesToVisit.removeLast()

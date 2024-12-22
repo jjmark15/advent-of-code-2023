@@ -1,8 +1,8 @@
 package twenty_three.day10
 
-import utils.Grid2D
-import utils.Grid2DDirection
-import utils.Grid2DPoint
+import utils.grids.twodee.Grid2D
+import utils.grids.twodee.Direction2D
+import utils.grids.twodee.Point2D
 
 fun part1(input: PipeGrid): Int = findFarthestDistanceFromStart(input)
 
@@ -35,23 +35,23 @@ sealed interface GridElement {
     data object StartingPosition : GridElement
 }
 
-sealed class PipePiece(val first: Grid2DDirection, val second: Grid2DDirection) : GridElement {
-    data object Vertical : PipePiece(Grid2DDirection.North, Grid2DDirection.South)
-    data object Horizontal : PipePiece(Grid2DDirection.East, Grid2DDirection.West)
-    data object NorthEast : PipePiece(Grid2DDirection.North, Grid2DDirection.East)
-    data object NorthWest : PipePiece(Grid2DDirection.North, Grid2DDirection.West)
-    data object SouthWest : PipePiece(Grid2DDirection.South, Grid2DDirection.West)
-    data object SouthEast : PipePiece(Grid2DDirection.South, Grid2DDirection.East)
+sealed class PipePiece(val first: Direction2D, val second: Direction2D) : GridElement {
+    data object Vertical : PipePiece(Direction2D.North, Direction2D.South)
+    data object Horizontal : PipePiece(Direction2D.East, Direction2D.West)
+    data object NorthEast : PipePiece(Direction2D.North, Direction2D.East)
+    data object NorthWest : PipePiece(Direction2D.North, Direction2D.West)
+    data object SouthWest : PipePiece(Direction2D.South, Direction2D.West)
+    data object SouthEast : PipePiece(Direction2D.South, Direction2D.East)
 
-    fun connectsBy(direction: Grid2DDirection): Boolean = direction == first || direction == second
+    fun connectsBy(direction: Direction2D): Boolean = direction == first || direction == second
 }
 
 class PipeGrid(inner: List<List<GridElement>>) : Grid2D<GridElement>(inner) {
-    fun startingPosition(): Grid2DPoint {
+    fun startingPosition(): Point2D {
         for ((rowIndex, row) in inner.withIndex()) {
             for ((columnIndex, element) in row.withIndex()) {
                 if (element is GridElement.StartingPosition) {
-                    return Grid2DPoint(rowIndex, columnIndex)
+                    return Point2D(rowIndex, columnIndex)
                 }
             }
         }
@@ -59,7 +59,7 @@ class PipeGrid(inner: List<List<GridElement>>) : Grid2D<GridElement>(inner) {
     }
 
     fun connectedPositions(
-        position: Grid2DPoint
+        position: Point2D
     ): List<PipeSegment> = when (val element = get(position)) {
         is GridElement.StartingPosition -> adjacentPipePositions(position)
         is PipePiece -> listOf(
@@ -70,8 +70,8 @@ class PipeGrid(inner: List<List<GridElement>>) : Grid2D<GridElement>(inner) {
         else -> throw Exception("Grid element cannot be connected")
     }
 
-    private fun adjacentPipePositions(position: Grid2DPoint): List<PipeSegment> =
-        listOf(Grid2DDirection.North, Grid2DDirection.East, Grid2DDirection.South, Grid2DDirection.West).map {
+    private fun adjacentPipePositions(position: Point2D): List<PipeSegment> =
+        listOf(Direction2D.North, Direction2D.East, Direction2D.South, Direction2D.West).map {
             PipeSegment(
                 position.toThe(it), it.opposite()
             )
@@ -85,4 +85,4 @@ class PipeGrid(inner: List<List<GridElement>>) : Grid2D<GridElement>(inner) {
         }
 }
 
-data class PipeSegment(val position: Grid2DPoint, val joinedFrom: Grid2DDirection? = null)
+data class PipeSegment(val position: Point2D, val joinedFrom: Direction2D? = null)

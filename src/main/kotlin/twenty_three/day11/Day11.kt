@@ -1,11 +1,11 @@
 package twenty_three.day11
 
-import utils.Grid2D
+import utils.grids.twodee.Grid2D
 import utils.cartesianProduct
 
-fun part1(input: Grid2D<twenty_three.day11.SpaceElement>): Long = twenty_three.day11.part2(input, 2)
+fun part1(input: Grid2D<SpaceElement>): Long = twenty_three.day11.part2(input, 2)
 
-fun part2(input: Grid2D<twenty_three.day11.SpaceElement>, expansionFactor: Int): Long {
+fun part2(input: Grid2D<SpaceElement>, expansionFactor: Int): Long {
     val emptyRows = input.rowsAllMatching { spaceElement -> spaceElement == twenty_three.day11.SpaceElement.Empty }
     val emptyColumns = input.columnsAllMatching { spaceElement -> spaceElement == twenty_three.day11.SpaceElement.Empty }
 

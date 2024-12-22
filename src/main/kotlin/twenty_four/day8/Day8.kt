@@ -1,7 +1,7 @@
 package twenty_four.day8
 
-import utils.Grid2D
-import utils.Grid2DPoint
+import utils.grids.twodee.Grid2D
+import utils.grids.twodee.Point2D
 
 data class Frequency(val value: Char)
 
@@ -31,10 +31,10 @@ fun part2(map: Grid2D<Frequency?>): Int = map.mapIndexedNotNull { point, value -
 
 private fun allResonantAntinodePositions(
     map: Grid2D<Frequency?>,
-    first: Grid2DPoint,
-    second: Grid2DPoint
-): List<Grid2DPoint> {
-    val positions: MutableSet<Grid2DPoint> = mutableSetOf(first, second)
+    first: Point2D,
+    second: Point2D
+): List<Point2D> {
+    val positions: MutableSet<Point2D> = mutableSetOf(first, second)
     var positionOffsetMultiplier = 1
 
     while (true) {
@@ -49,18 +49,18 @@ private fun allResonantAntinodePositions(
 
 private fun antinodePositionsWithResonanceMultiplier(
     map: Grid2D<Frequency?>,
-    first: Grid2DPoint,
-    second: Grid2DPoint,
+    first: Point2D,
+    second: Point2D,
     resonanceOffsetMultiplier: Int
-): List<Grid2DPoint> =
+): List<Point2D> =
     listOf(
         nextResonantLocation(first, second, resonanceOffsetMultiplier),
         nextResonantLocation(second, first, resonanceOffsetMultiplier),
     ).filter { map.contains(it) }
 
-private fun nextResonantLocation(first: Grid2DPoint, second: Grid2DPoint, offsetMultiplier: Int): Grid2DPoint {
+private fun nextResonantLocation(first: Point2D, second: Point2D, offsetMultiplier: Int): Point2D {
     val rowDiff = (first.row - second.row)
     val colDiff = (first.column - second.column)
 
-    return Grid2DPoint(first.row + rowDiff * offsetMultiplier, first.column + colDiff * offsetMultiplier)
+    return Point2D(first.row + rowDiff * offsetMultiplier, first.column + colDiff * offsetMultiplier)
 }

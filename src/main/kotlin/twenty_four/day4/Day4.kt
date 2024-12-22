@@ -1,7 +1,7 @@
 package twenty_four.day4
 
-import utils.Grid2D
-import utils.Grid2DDirection
+import utils.grids.twodee.Grid2D
+import utils.grids.twodee.Direction2D
 
 enum class Letter {
     X, M, A, S
@@ -12,14 +12,14 @@ private val MAS = listOf(Letter.M, Letter.A, Letter.S)
 
 fun part1(input: List<List<Letter>>): Long {
     val directions = listOf(
-        Grid2DDirection.North,
-        Grid2DDirection.NorthEast,
-        Grid2DDirection.East,
-        Grid2DDirection.SouthEast,
-        Grid2DDirection.South,
-        Grid2DDirection.SouthWest,
-        Grid2DDirection.West,
-        Grid2DDirection.NorthWest
+        Direction2D.North,
+        Direction2D.NorthEast,
+        Direction2D.East,
+        Direction2D.SouthEast,
+        Direction2D.South,
+        Direction2D.SouthWest,
+        Direction2D.West,
+        Direction2D.NorthWest
     )
     val grid = Grid2D(input)
 
@@ -36,8 +36,8 @@ fun part2(input: List<List<Letter>>): Long {
     return grid.mapPoints { point ->
         val middle = grid.get(point)
 
-        val first = listOfNotNull(grid.getOrNull(point.toThe(Grid2DDirection.NorthEast)), middle, grid.getOrNull(point.toThe(Grid2DDirection.SouthWest)))
-        val second = listOfNotNull(grid.getOrNull(point.toThe(Grid2DDirection.NorthWest)), middle, grid.getOrNull(point.toThe(Grid2DDirection.SouthEast)))
+        val first = listOfNotNull(grid.getOrNull(point.toThe(Direction2D.NorthEast)), middle, grid.getOrNull(point.toThe(Direction2D.SouthWest)))
+        val second = listOfNotNull(grid.getOrNull(point.toThe(Direction2D.NorthWest)), middle, grid.getOrNull(point.toThe(Direction2D.SouthEast)))
 
         (first == MAS || first.asReversed() == MAS) && (second == MAS || second.asReversed() == MAS)
     }.count { it }.toLong()

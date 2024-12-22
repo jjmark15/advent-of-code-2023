@@ -1,6 +1,6 @@
 package twenty_four.day10
 
-import utils.Grid2D
+import utils.grids.twodee.Grid2D
 
 class InputParser {
     fun parse(lines: List<String>): Grid2D<Int> =

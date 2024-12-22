@@ -6,8 +6,8 @@ import parser4k.oneOf
 import parser4k.oneOrMore
 import parser4k.parseWith
 import parser4k.str
-import utils.Grid2D
-import utils.Grid2DDirection
+import utils.grids.twodee.Grid2D
+import utils.grids.twodee.Direction2D
 
 class InputParser {
 
@@ -18,10 +18,10 @@ class InputParser {
 
     private fun toStartingPosition(s: String): MapElement.StartingPosition {
         return when (s) {
-            "^" -> MapElement.StartingPosition(Grid2DDirection.North)
-            ">" -> MapElement.StartingPosition(Grid2DDirection.East)
-            "v" -> MapElement.StartingPosition(Grid2DDirection.South)
-            "<" -> MapElement.StartingPosition(Grid2DDirection.West)
+            "^" -> MapElement.StartingPosition(Direction2D.North)
+            ">" -> MapElement.StartingPosition(Direction2D.East)
+            "v" -> MapElement.StartingPosition(Direction2D.South)
+            "<" -> MapElement.StartingPosition(Direction2D.West)
             else -> TODO()
         }
     }

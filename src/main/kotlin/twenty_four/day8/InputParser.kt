@@ -1,6 +1,6 @@
 package twenty_four.day8
 
-import utils.Grid2D
+import utils.grids.twodee.Grid2D
 import utils.toCharList
 
 class InputParser {
