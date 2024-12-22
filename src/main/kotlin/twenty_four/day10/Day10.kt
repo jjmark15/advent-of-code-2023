@@ -15,7 +15,7 @@ private fun solve(input: Grid2D<Int>, uniquePaths: Boolean): Int {
     return trailheads.sumOf { trailhead ->
             grid2DTraverser.breadthFirstSearch(
                 trailhead,
-                { it: Int -> it == 9 },
+                9,
                 uniquePaths
             ).count()
         }

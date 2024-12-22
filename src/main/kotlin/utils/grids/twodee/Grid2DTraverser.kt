@@ -23,4 +23,8 @@ class Grid2DTraverser<T>(
 
         return reachableDestinations.toList()
     }
+
+    fun breadthFirstSearch(
+        from: Point2D, target: T, uniquePaths: Boolean = true
+    ): List<Point2D> = breadthFirstSearch(from, { e -> e == target }, uniquePaths)
 }
