@@ -14,7 +14,7 @@ sealed interface MapElement {
     data object Empty : MapElement
     data object Obstacle : MapElement
     data object IntentionalObstacle : MapElement
-    data class StartingPosition(val direction: Grid2DDirection.OrthogonalGrid2DDirection) : MapElement
+    data class StartingPosition(val direction: Grid2DDirection.CardinalGrid2DDirection) : MapElement
     data class GuardPath(val direction: PathDirection) : MapElement
 
     enum class PathDirection {

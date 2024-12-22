@@ -9,7 +9,7 @@ fun part2(input: Grid2D<Int>): Int = solve(input, false)
 
 private fun solve(input: Grid2D<Int>, uniquePaths: Boolean): Int {
     val mapTraverser = MapTraverser(input) { map, from ->
-        input.orthogonalNeighbours(from).filter { map.get(it) == map.get(from) + 1 }
+        input.cardinalNeighbours(from).filter { map.get(it) == map.get(from) + 1 }
     }
     val trailheads = input.elementsMatching { height -> height == 0 }
     return trailheads.sumOf { trailhead ->

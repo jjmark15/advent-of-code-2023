@@ -15,10 +15,10 @@ open class Grid2D<T>(cells: List<List<T>>) {
 
     fun get(point: Grid2DPoint): T = inner[point.row][point.column]
 
-    fun getOrNull(point: Grid2DPoint): T? = if (!contains(point)) {
-        null
-    } else {
+    fun getOrNull(point: Grid2DPoint): T? = if (contains(point)) {
         get(point)
+    } else {
+        null
     }
 
     fun copyWith(point: Grid2DPoint, modifier: Function<T, T>): Grid2D<T> {
@@ -31,10 +31,9 @@ open class Grid2D<T>(cells: List<List<T>>) {
         return point.row in 0..<height && point.column in 0..<width
     }
 
-    fun orthogonalNeighbours(point: Grid2DPoint): List<Grid2DPoint> =
-        point.orthogonallySurroundingPoints().filter { contains(it) }
+    fun cardinalNeighbours(point: Grid2DPoint): List<Grid2DPoint> = point.cardinalNeighbours().filter { contains(it) }
 
-    fun neighbours(point: Grid2DPoint): List<Grid2DPoint> = point.surroundingPoints().filter { contains(it) }
+    fun neighbours(point: Grid2DPoint): List<Grid2DPoint> = point.neighbours().filter { contains(it) }
 
     fun rowsAllMatching(matcher: (T) -> Boolean): List<Int> =
         inner.withIndex().filter { (_, row) -> row.all { element -> matcher.invoke(element) } }
@@ -97,15 +96,11 @@ open class Grid2D<T>(cells: List<List<T>>) {
 
     fun count(predicate: Predicate<T>): Int = inner.sumOf { row -> row.count { predicate.test(it) } }
 
-    fun cellsInDirection(from: Grid2DPoint, count: Int, direction: Grid2DDirection): List<Grid2DPoint> {
-        val cells = mutableListOf(from)
-
-        for (i in 1 until count) {
-            cells.add(cells.last().toThe(direction))
-        }
-
-        return cells
-    }
+    fun pointsInDirection(from: Grid2DPoint, count: Int, direction: Grid2DDirection): List<Grid2DPoint> =
+        (0..<count).fold(mutableListOf(from)) { points, _ ->
+            points.add(points.last().toThe(direction))
+            points
+        }.take(count)
 
     fun isOnEdge(point: Grid2DPoint): Boolean {
         return point.row == 0 || point.row == height - 1 || point.column == 0 || point.column == width - 1
@@ -128,10 +123,10 @@ sealed interface Grid2DDirection {
     data object SouthEast : Grid2DDirection
     data object SouthWest : Grid2DDirection
     data object NorthWest : Grid2DDirection
-    data object North : OrthogonalGrid2DDirection
-    data object East : OrthogonalGrid2DDirection
-    data object South : OrthogonalGrid2DDirection
-    data object West : OrthogonalGrid2DDirection
+    data object North : CardinalGrid2DDirection
+    data object East : CardinalGrid2DDirection
+    data object South : CardinalGrid2DDirection
+    data object West : CardinalGrid2DDirection
 
     fun opposite(): Grid2DDirection = when (this) {
         North -> South
@@ -152,7 +147,7 @@ sealed interface Grid2DDirection {
         else -> TODO()
     }
 
-    sealed interface OrthogonalGrid2DDirection : Grid2DDirection
+    sealed interface CardinalGrid2DDirection : Grid2DDirection
 }
 
 data class Grid2DPoint(val row: Int, val column: Int) {
@@ -169,7 +164,7 @@ data class Grid2DPoint(val row: Int, val column: Int) {
         }
     }
 
-    fun surroundingPoints(): List<Grid2DPoint> = listOf(
+    fun neighbours(): List<Grid2DPoint> = listOf(
         this.toThe(Grid2DDirection.North),
         this.toThe(Grid2DDirection.NorthEast),
         this.toThe(Grid2DDirection.East),
@@ -180,7 +175,7 @@ data class Grid2DPoint(val row: Int, val column: Int) {
         this.toThe(Grid2DDirection.NorthWest)
     )
 
-    fun orthogonallySurroundingPoints(): List<Grid2DPoint> = listOf(
+    fun cardinalNeighbours(): List<Grid2DPoint> = listOf(
         this.toThe(Grid2DDirection.North),
         this.toThe(Grid2DDirection.East),
         this.toThe(Grid2DDirection.South),

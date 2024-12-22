@@ -25,7 +25,7 @@ fun part1(input: List<List<Letter>>): Long {
 
     return grid.mapPoints { point ->
         directions.count { direction ->
-            grid.cellsInDirection(point, 4, direction).mapNotNull { grid.getOrNull(it) } == XMAS
+            grid.pointsInDirection(point, 4, direction).mapNotNull { grid.getOrNull(it) } == XMAS
         }
     }.sum().toLong()
 }
