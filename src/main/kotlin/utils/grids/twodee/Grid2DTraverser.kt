@@ -10,8 +10,7 @@ class Grid2DTraverser<T>(
         from: Point2D, destinationMatcher: Predicate<T>, mode: TraversalMode, uniquePaths: Boolean
     ): List<Point2D> {
         val visitedPlaces = mutableSetOf<Point2D>()
-        val placesToVisit = ArrayDeque<Point2D>()
-        placesToVisit.add(from)
+        val placesToVisit = ArrayDeque<Point2D>().also { it.add(from) }
         val reachableDestinations = mutableListOf<Point2D>()
 
         while (placesToVisit.isNotEmpty()) {
