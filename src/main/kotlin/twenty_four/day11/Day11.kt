@@ -11,9 +11,8 @@ private fun solve(input: List<Long>, blinks: Int): Long {
 
 private fun countAfterNBlinks(stoneValue: Long, count: Int, blinkCache: MutableMap<CacheKey, Long>): Long {
     val cacheKey = CacheKey(stoneValue, count)
-    if (blinkCache.containsKey(cacheKey)) {
-        return blinkCache[cacheKey]!!
-    }
+    if (blinkCache.containsKey(cacheKey)) return blinkCache[cacheKey]!!
+
     val (first, second) = blink(stoneValue)
     if (count == 1) return 1 + if (second == null) 0L else 1
     val stoneCount = countAfterNBlinks(first, count - 1, blinkCache) + (second?.let {

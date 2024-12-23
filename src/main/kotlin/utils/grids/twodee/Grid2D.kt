@@ -28,9 +28,7 @@ open class Grid2D<T>(cells: List<List<T>>) {
         return Grid2D(newInner.map { row -> row.toList() })
     }
 
-    fun contains(point: Point2D): Boolean {
-        return point.row in 0..<height && point.column in 0..<width
-    }
+    fun contains(point: Point2D): Boolean = point.row in 0..<height && point.column in 0..<width
 
     fun cardinalNeighbours(point: Point2D): List<Point2D> = point.cardinalNeighbours().filter { contains(it) }
 
@@ -75,14 +73,13 @@ open class Grid2D<T>(cells: List<List<T>>) {
         return verticalDistance + horizontalDistance
     }
 
-    fun <R> mapPoints(mapper: Function<Point2D, R>): List<R> =
-        inner.flatMapIndexed { rowIndex: Int, cells: List<T> ->
-            List(cells.size) { columnIndex ->
-                Point2D(
-                    rowIndex, columnIndex
-                )
-            }
-        }.map { point -> mapper.apply(point) }
+    fun <R> mapPoints(mapper: Function<Point2D, R>): List<R> = inner.flatMapIndexed { rowIndex: Int, cells: List<T> ->
+        List(cells.size) { columnIndex ->
+            Point2D(
+                rowIndex, columnIndex
+            )
+        }
+    }.map { point -> mapper.apply(point) }
 
     fun <R> map(mapper: Function<T, R>): List<List<R>> = inner.map2D { mapper.apply(it) }
 
@@ -90,10 +87,9 @@ open class Grid2D<T>(cells: List<List<T>>) {
         row.mapIndexed { columnIndex, value -> mapper.apply(Point2D(rowIndex, columnIndex), value) }
     }
 
-    fun <R> mapIndexedNotNull(mapper: BiFunction<Point2D, T, R?>): List<List<R>> =
-        inner.mapIndexed { rowIndex, row ->
-            row.mapIndexedNotNull() { columnIndex, value -> mapper.apply(Point2D(rowIndex, columnIndex), value) }
-        }
+    fun <R> mapIndexedNotNull(mapper: BiFunction<Point2D, T, R?>): List<List<R>> = inner.mapIndexed { rowIndex, row ->
+        row.mapIndexedNotNull() { columnIndex, value -> mapper.apply(Point2D(rowIndex, columnIndex), value) }
+    }
 
     fun count(predicate: Predicate<T>): Int = inner.sumOf { row -> row.count { predicate.test(it) } }
 
@@ -103,9 +99,8 @@ open class Grid2D<T>(cells: List<List<T>>) {
             points
         }.take(count)
 
-    fun isOnEdge(point: Point2D): Boolean {
-        return point.row == 0 || point.row == height - 1 || point.column == 0 || point.column == width - 1
-    }
+    fun isOnEdge(point: Point2D): Boolean =
+        point.row == 0 || point.row == height - 1 || point.column == 0 || point.column == width - 1
 
     fun setPoint(position: Point2D, value: T) {
         inner[position.row][position.column] = value
