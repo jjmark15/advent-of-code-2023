@@ -29,5 +29,7 @@ sealed interface Direction2D {
         else -> TODO()
     }
 
+    fun left90(): Direction2D = right90().opposite()
+
     sealed interface CardinalDirection2D : Direction2D
 }
