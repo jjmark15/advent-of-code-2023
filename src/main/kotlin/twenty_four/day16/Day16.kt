@@ -25,9 +25,9 @@ private fun nextPositions(map: Grid2D<MazeElement>, positionAndCost: PositionAnd
         positionAndCost.moved(Position2D::turnedLeft90, 1000),
     ).filter { positionAndCost -> map.get(positionAndCost.position.point) != MazeElement.Wall }
 
-private class MazeRouteFinder(
-    private val grid: Grid2D<MazeElement>,
-    private val nextPositionsFactory: BiFunction<Grid2D<MazeElement>, PositionAndCost, List<PositionAndCost>>
+private class MazeRouteFinder<T>(
+    private val grid: Grid2D<T>,
+    private val nextPositionsFactory: BiFunction<Grid2D<T>, PositionAndCost, List<PositionAndCost>>
 ) {
     fun findCheapestRouteCost(startPosition: Position2D, endPoint: Point2D): Long {
         val visitedAndCosts: MutableMap<Position2D, Long> = mutableMapOf()
