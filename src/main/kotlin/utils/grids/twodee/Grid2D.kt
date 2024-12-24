@@ -109,6 +109,16 @@ open class Grid2D<T>(cells: List<List<T>>) {
     fun debugDisplay(valueDisplay: Function<T, String>): String =
         inner.joinToString("\n") { it.joinToString("", transform = valueDisplay::apply) }
 
+    fun debugDisplay(valueDisplay: BiFunction<Point2D, T, String>): String = inner.mapIndexed { rowIndex, row ->
+        row.mapIndexed { columnIndex, value ->
+            valueDisplay.apply(
+                Point2D(
+                    rowIndex, columnIndex
+                ), value
+            )
+        }.joinToString("")
+    }.joinToString("\n")
+
     private fun ascendingNumberRange(a: Int, b: Int): IntRange = IntRange(
         min(a, b), max(a, b)
     )
