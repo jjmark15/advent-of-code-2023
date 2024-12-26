@@ -1,7 +1,9 @@
 package utils.grids.twodee
 
 import utils.map2D
+import java.util.function.BiConsumer
 import java.util.function.BiFunction
+import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Predicate
 import kotlin.math.max
@@ -85,6 +87,22 @@ open class Grid2D<T>(cells: List<List<T>>) {
 
     fun <R> mapIndexed(mapper: BiFunction<Point2D, T, R>): List<List<R>> = inner.mapIndexed { rowIndex, row ->
         row.mapIndexed { columnIndex, value -> mapper.apply(Point2D(rowIndex, columnIndex), value) }
+    }
+
+    fun forEach(consumer: Consumer<T>) {
+        inner.flatten().forEach(consumer)
+    }
+
+    fun forEachIndexed(consumer: BiConsumer<Point2D, T>) {
+        inner.forEachIndexed { rowIndex, row ->
+            row.forEachIndexed { columnIndex, value ->
+                consumer.accept(
+                    Point2D(
+                        rowIndex, columnIndex
+                    ), value
+                )
+            }
+        }
     }
 
     fun <R> mapIndexedNotNull(mapper: BiFunction<Point2D, T, R?>): List<List<R>> = inner.mapIndexed { rowIndex, row ->
