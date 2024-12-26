@@ -17,5 +17,15 @@ class Day12Test : AbstractSolutionTestBase<Grid2D<Char>>(2024, 12) {
         assertThat(part1(parser.parse(data()))).isEqualTo(1344578)
     }
 
+    @Test
+    fun `part 2 short`() {
+        assertThat(part2(parser.parse(shortData()))).isEqualTo(1206)
+    }
+
+    @Test
+    fun `part 2 long`() {
+        assertThat(part2(parser.parse(data()))).isEqualTo(814302)
+    }
+
     override fun parser() = InputParserImpl()
 }
