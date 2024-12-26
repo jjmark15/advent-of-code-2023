@@ -1,16 +1,16 @@
 package utils.grids.twodee
 
 data class Point2D(val row: Int, val column: Int) {
-    fun toThe(direction: Direction2D): Point2D {
+    fun toThe(direction: Direction2D, increment: Int = 1): Point2D {
         return when (direction) {
-            Direction2D.North -> this.copy(row = row - 1)
-            Direction2D.East -> this.copy(column = column + 1)
-            Direction2D.South -> this.copy(row = row + 1)
-            Direction2D.West -> this.copy(column = column - 1)
-            Direction2D.NorthEast -> Point2D(row = row - 1, column = column + 1)
-            Direction2D.SouthEast -> Point2D(row = row + 1, column = column + 1)
-            Direction2D.SouthWest -> Point2D(row = row + 1, column = column - 1)
-            Direction2D.NorthWest -> Point2D(row = row - 1, column = column - 1)
+            Direction2D.North -> this.copy(row = row - increment)
+            Direction2D.East -> this.copy(column = column + increment)
+            Direction2D.South -> this.copy(row = row + increment)
+            Direction2D.West -> this.copy(column = column - increment)
+            Direction2D.NorthEast -> Point2D(row = row - increment, column = column + increment)
+            Direction2D.SouthEast -> Point2D(row = row + increment, column = column + increment)
+            Direction2D.SouthWest -> Point2D(row = row + increment, column = column - increment)
+            Direction2D.NorthWest -> Point2D(row = row - increment, column = column - increment)
         }
     }
 
@@ -31,4 +31,6 @@ data class Point2D(val row: Int, val column: Int) {
         this.toThe(Direction2D.South),
         this.toThe(Direction2D.West)
     )
+
+    fun distanceTo(other: Point2D): Int = other.row - row + other.column - column
 }
