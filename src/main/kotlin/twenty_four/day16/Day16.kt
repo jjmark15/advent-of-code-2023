@@ -64,6 +64,7 @@ private class MazeRouteFinder<T>(
 
         while (toVisit.isNotEmpty()) {
             val route = toVisit.poll()
+            if (cheapestCost != null && route.cost > cheapestCost) return cheapestRoutes.toList()
             if (route.last.position.point == endPoint) {
                 if (cheapestCost == null) cheapestCost = route.cost
                 if (route.cost == cheapestCost) cheapestRoutes.add(route)
