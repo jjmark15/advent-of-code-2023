@@ -1,13 +1,13 @@
 package twenty_four.day16
 
-import AbstractSolutionTestBase
+import AbstractSolutionTest
 import InputParser
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
 import utils.grids.twodee.Grid2D
 
-class Day16Test : AbstractSolutionTestBase<Grid2D<MazeElement>>(2024, 16) {
+class Day16Test : AbstractSolutionTest<Grid2D<MazeElement>>(2024, 16) {
     @Test
     fun `part 1 long`() {
         assertThat(part1(parser.parse(data()))).isEqualTo(65436)
