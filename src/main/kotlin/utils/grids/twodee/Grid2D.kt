@@ -9,12 +9,17 @@ import java.util.function.Predicate
 import kotlin.math.max
 import kotlin.math.min
 
-open class Grid2D<T>(cells: List<List<T>>) {
+open class Grid2D<T>(cells: List<List<T>> = listOf<List<T>>()) {
     val inner: MutableList<MutableList<T>> = cells.map { row -> row.toMutableList() }.toMutableList()
     private val height: Int get() = inner.size
     private val width: Int get() = inner.firstOrNull()?.size ?: 0
     private val rowExpansionFactors: MutableMap<Int, Int> = mutableMapOf()
     private val columnExpansionFactors: MutableMap<Int, Int> = mutableMapOf()
+
+    companion object {
+        fun <T> ofSize(height: Int, width: Int, initialValueFunction: Function<Point2D, T>): Grid2D<T> =
+            Grid2D((0..<height).map { rowIndex -> (0..<width).map { columnIndex -> initialValueFunction.apply(Point2D(rowIndex, columnIndex)) } })
+    }
 
     fun get(point: Point2D): T = inner[point.row][point.column]
 
