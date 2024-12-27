@@ -9,7 +9,6 @@ import parser4k.oneOf
 import parser4k.oneOrMore
 import parser4k.parseWith
 import parser4k.str
-import utils.grids.twodee.Point2D
 import utils.lineGroups
 
 class InputParserImpl : InputParser<List<ClawMachineSettings>> {
@@ -31,10 +30,10 @@ class InputParserImpl : InputParser<List<ClawMachineSettings>> {
         )
     }
     private val newLineParser: Parser<String> = str("\n")
-    private val prizeLocationParser: Parser<Point2D> =
+    private val prizeLocationParser: Parser<PrizeLocation> =
         inOrder(str("Prize: "), displacement, str(", "), displacement).map { (_, xPosition, _, yPosition) ->
-            Point2D(
-                yPosition, xPosition
+            PrizeLocation(
+                xPosition.toLong(), yPosition.toLong()
             )
         }
     private val clawMachineSettingsParser: Parser<ClawMachineSettings> = inOrder(

@@ -1,11 +1,23 @@
 package twenty_four.day13
 
-import utils.grids.twodee.Point2D
-
 fun part1(input: List<ClawMachineSettings>): Long = input.sumOf { fewestTokensToWinPrize(it) }
 
+fun part2(input: List<ClawMachineSettings>): Long {
+    val prizeLocationOffset = 10000000000000
+    return input.map {
+        it.copy(
+            prizeLocation = it.prizeLocation.copy(
+                x = it.prizeLocation.x + prizeLocationOffset,
+                y = it.prizeLocation.y + prizeLocationOffset
+            )
+        )
+    }.sumOf { fewestTokensToWinPrize(it) }
+}
+
+data class PrizeLocation(val x: Long, val y: Long)
+
 data class ClawMachineSettings(
-    val buttonASettings: ButtonSettings, val buttonBSettings: ButtonSettings, val prizeLocation: Point2D
+    val buttonASettings: ButtonSettings, val buttonBSettings: ButtonSettings, val prizeLocation: PrizeLocation
 )
 
 enum class ButtonName {
@@ -25,8 +37,8 @@ private fun fewestTokensToWinPrize(clawMachineSettings: ClawMachineSettings): Lo
     val aY = clawMachineSettings.buttonASettings.yDisplacement
     val bX = clawMachineSettings.buttonBSettings.xDisplacement
     val bY = clawMachineSettings.buttonBSettings.yDisplacement
-    val pX = clawMachineSettings.prizeLocation.column
-    val pY = clawMachineSettings.prizeLocation.row
+    val pX = clawMachineSettings.prizeLocation.x
+    val pY = clawMachineSettings.prizeLocation.y
     val denominator = aX * bY - aY * bX
     val countA = (bY * pX - bX * pY) / denominator
     val countB = (aX * pY - aY * pX) / denominator
