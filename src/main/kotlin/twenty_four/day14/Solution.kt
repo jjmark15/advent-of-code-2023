@@ -19,6 +19,8 @@ fun part2(input: List<PointAndVelocity>, spaceHeight: Int, spaceWidth: Int): Lon
         seconds++
     }
 
+    println(robotSecurityPredictor.robotLayout())
+
     return seconds
 }
 
@@ -55,8 +57,7 @@ private class RobotSecurityPredictor(
     }
 
     fun largestRegionSize(): Int {
-        val grid: Grid2D<Int> = Grid2D.ofSize(spaceHeight, spaceWidth) { _ -> 0 }
-        robots.groupBy { it.point }.forEach { (point, robots) -> grid.setPoint(point, robots.size) }
+        val grid: Grid2D<Int> = robotsOnGrid()
         val toVisit: ArrayDeque<Point2D> = ArrayDeque<Point2D>().also { it.addAll(robots.map { it.point }) }
         val seen = mutableSetOf<Point2D>()
         var largestRegionSize = 0
@@ -76,6 +77,12 @@ private class RobotSecurityPredictor(
         return largestRegionSize
     }
 
+    private fun robotsOnGrid(): Grid2D<Int> {
+        val grid: Grid2D<Int> = Grid2D.ofSize(spaceHeight, spaceWidth) { _ -> 0 }
+        robots.groupBy { it.point }.forEach { (point, robots) -> grid.setPoint(point, robots.size) }
+        return grid
+    }
+
     private fun regionFromPoint(grid: Grid2D<Int>, point: Point2D): List<Point2D> {
         val seen = mutableSetOf<Point2D>()
         val toVisit = ArrayDeque<Point2D>().also { it.add(point) }
@@ -90,6 +97,17 @@ private class RobotSecurityPredictor(
         }
 
         return seen.toList()
+    }
+
+    fun robotLayout(): String {
+        val grid = robotsOnGrid()
+        return grid.debugDisplay {
+            if (it > 0) {
+                "#"
+            } else {
+                "."
+            }
+        }
     }
 }
 
