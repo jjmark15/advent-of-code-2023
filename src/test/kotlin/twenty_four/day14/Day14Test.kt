@@ -16,5 +16,10 @@ class Day14Test : AbstractSolutionTest<List<PointAndVelocity>>(2024, 14) {
         assertThat(part1(parser.parse(data()), 103, 101)).isEqualTo(231852216)
     }
 
+    @Test
+    fun `part 2 long`() {
+        assertThat(part2(parser.parse(data()), 103, 101)).isEqualTo(8159)
+    }
+
     override fun parser() = InputParserImpl()
 }

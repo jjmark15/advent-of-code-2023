@@ -1,12 +1,25 @@
 package twenty_four.day14
 
 import utils.grids.twodee.Direction2D
+import utils.grids.twodee.Grid2D
 import utils.grids.twodee.Point2D
 
 fun part1(input: List<PointAndVelocity>, spaceHeight: Int, spaceWidth: Int): Long {
     val robotSecurityPredictor = RobotSecurityPredictor(input, spaceHeight, spaceWidth)
     robotSecurityPredictor.advancePredictionsFor(100)
     return robotSecurityPredictor.countRobotsPerQuadrant().reduce { acc, curr -> acc * curr }
+}
+
+fun part2(input: List<PointAndVelocity>, spaceHeight: Int, spaceWidth: Int): Long {
+    val robotSecurityPredictor = RobotSecurityPredictor(input, spaceHeight, spaceWidth)
+    var seconds: Long = 0
+
+    while (robotSecurityPredictor.largestRegionSize() < 20) {
+        robotSecurityPredictor.advancePredictionsFor(1)
+        seconds++
+    }
+
+    return seconds
 }
 
 private class RobotSecurityPredictor(
@@ -39,6 +52,44 @@ private class RobotSecurityPredictor(
             if (row > midRow) key += 2
             key
         }.values.map { value -> value.size.toLong() }
+    }
+
+    fun largestRegionSize(): Int {
+        val grid: Grid2D<Int> = Grid2D.ofSize(spaceHeight, spaceWidth) { _ -> 0 }
+        robots.groupBy { it.point }.forEach { (point, robots) -> grid.setPoint(point, robots.size) }
+        val toVisit: ArrayDeque<Point2D> = ArrayDeque<Point2D>().also { it.addAll(robots.map { it.point }) }
+        val seen = mutableSetOf<Point2D>()
+        var largestRegionSize = 0
+
+        while (toVisit.isNotEmpty()) {
+            val point = toVisit.removeFirst()
+            if (point in seen) {
+                continue
+            }
+            val region = regionFromPoint(grid, point)
+            if (region.size > largestRegionSize) {
+                largestRegionSize = region.size
+            }
+            seen.addAll(region)
+        }
+
+        return largestRegionSize
+    }
+
+    private fun regionFromPoint(grid: Grid2D<Int>, point: Point2D): List<Point2D> {
+        val seen = mutableSetOf<Point2D>()
+        val toVisit = ArrayDeque<Point2D>().also { it.add(point) }
+
+        while (toVisit.isNotEmpty()) {
+            val point = toVisit.removeFirst()
+            if (point in seen || point in toVisit) continue
+            seen.add(point)
+            toVisit.addAll(
+                grid.cardinalNeighbours(point)
+                    .filter { !seen.contains(it) && !toVisit.contains(it) && grid.get(it) > 0 })
+        }
+
+        return seen.toList()
     }
 }
 
