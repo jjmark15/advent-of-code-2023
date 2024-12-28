@@ -21,7 +21,7 @@ class InputParserImpl : InputParser<ProblemInput> {
         }
     }
     private val mapLine: Parser<List<MapElement>> = oneOrMore(mapElement)
-    private val movement: Parser<Direction2D> = oneOf('^', '>', 'v', '<').map {
+    private val movement: Parser<Direction2D.CardinalDirection2D> = oneOf('^', '>', 'v', '<').map {
         when (it) {
             '^' -> Direction2D.North
             '>' -> Direction2D.East
@@ -30,13 +30,14 @@ class InputParserImpl : InputParser<ProblemInput> {
             else -> TODO()
         }
     }
-    private val movements: Parser<List<Direction2D>> = oneOrMore(movement)
+    private val movements: Parser<List<Direction2D.CardinalDirection2D>> = oneOrMore(movement)
 
     override fun parse(lines: List<String>): ProblemInput {
         val lineGroups = lines.lineGroups()
 
         val grid: Grid2D<MapElement> = Grid2D(lineGroups[0].map { line -> line.parseWith(mapLine) })
-        val intendedMovements: List<Direction2D> = lineGroups[1].flatMap { line -> line.parseWith(movements) }
+        val intendedMovements: List<Direction2D.CardinalDirection2D> =
+            lineGroups[1].flatMap { line -> line.parseWith(movements) }
         return ProblemInput(grid, intendedMovements)
     }
 }

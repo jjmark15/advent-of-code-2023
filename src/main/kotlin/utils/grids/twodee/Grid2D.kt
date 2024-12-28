@@ -90,6 +90,8 @@ open class Grid2D<T>(cells: List<List<T>> = listOf<List<T>>()) {
 
     fun <R> map(mapper: Function<T, R>): List<List<R>> = inner.map2D { mapper.apply(it) }
 
+    fun <R> flatMap(mapper: Function<T, List<R>>): List<List<R>> = inner.map { row -> row.flatMap { mapper.apply(it) } }
+
     fun <R> mapIndexed(mapper: BiFunction<Point2D, T, R>): List<List<R>> = inner.mapIndexed { rowIndex, row ->
         row.mapIndexed { columnIndex, value -> mapper.apply(Point2D(rowIndex, columnIndex), value) }
     }
