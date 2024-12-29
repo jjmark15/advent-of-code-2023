@@ -5,7 +5,9 @@ import utils.grids.twodee.Grid2D
 import utils.grids.twodee.Point2D
 import java.util.*
 
-data class ProblemInput(val warehouseMap: Grid2D<MapElement>, val intendedMovements: List<Direction2D.CardinalDirection2D>)
+data class ProblemInput(
+    val warehouseMap: Grid2D<MapElement>, val intendedMovements: List<Direction2D.CardinalDirection2D>
+)
 
 enum class MapElement {
     Box, Wall, Robot, Empty, LeftBoxHalf, RightBoxHalf
@@ -45,7 +47,9 @@ private class WarehouseManager(private val map: Grid2D<MapElement>) {
     }
 
     private fun tryToMoveRobot(robotLocation: Point2D, instruction: Direction2D.CardinalDirection2D): Point2D? {
-        val toVisit = PriorityQueue<Point2D>(compareBy { coordinatePriorityInDirection(it, instruction) }).apply { add(robotLocation) }
+        val toVisit = PriorityQueue<Point2D>(compareBy { coordinatePriorityInDirection(it, instruction) }).apply {
+            add(robotLocation)
+        }
         val moves = mutableListOf<Point2D>()
 
         while (toVisit.isNotEmpty()) {
@@ -57,7 +61,11 @@ private class WarehouseManager(private val map: Grid2D<MapElement>) {
             when (nextValue) {
                 MapElement.Wall -> return null
                 MapElement.Empty -> continue
-                MapElement.Box, MapElement.LeftBoxHalf, MapElement.RightBoxHalf -> toVisit.addAll(pointsLinkedTo(nextPoint).filter { !toVisit.contains(it) && !moves.contains(it) })
+                MapElement.Box, MapElement.LeftBoxHalf, MapElement.RightBoxHalf -> toVisit.addAll(
+                    pointsLinkedTo(
+                        nextPoint
+                    ).filter { !toVisit.contains(it) && !moves.contains(it) })
+
                 MapElement.Robot -> TODO()
             }
         }
@@ -67,12 +75,13 @@ private class WarehouseManager(private val map: Grid2D<MapElement>) {
         return robotLocation.toThe(instruction)
     }
 
-    private fun coordinatePriorityInDirection(point: Point2D, direction: Direction2D.CardinalDirection2D): Int = when (direction) {
-        Direction2D.East -> point.column
-        Direction2D.North -> -1 * point.row
-        Direction2D.South -> point.row
-        Direction2D.West -> -1 * point.column
-    }
+    private fun coordinatePriorityInDirection(point: Point2D, direction: Direction2D.CardinalDirection2D): Int =
+        when (direction) {
+            Direction2D.East -> point.column
+            Direction2D.North -> -1 * point.row
+            Direction2D.South -> point.row
+            Direction2D.West -> -1 * point.column
+        }
 
     private fun movePointInDirection(point: Point2D, direction: Direction2D) {
         map.setPoint(point.toThe(direction), map.get(point))
