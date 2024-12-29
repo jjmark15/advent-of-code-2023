@@ -24,6 +24,7 @@ private class Computer {
     }
 
     fun runProgram(program: List<Int>) {
+        output.clear()
         var cursor = 0
 
         while (cursor < program.size) {
@@ -39,7 +40,7 @@ private class Computer {
         var newCursor: Int? = null
 
         when (instruction) {
-            Instruction.ADV -> saveToRegister('A', divide(getRegisterValue('A'), 2f.pow(comboOperand).toInt()))
+            Instruction.ADV -> saveToRegister('A', getRegisterValue('A').div(2f.pow(comboOperand).toInt()))
             Instruction.BXL -> saveToRegister('B', bitwiseXOR(getRegisterValue('B'), literalOperand))
             Instruction.BST -> saveToRegister('B', comboOperand % 8)
             Instruction.JNZ ->
@@ -48,8 +49,8 @@ private class Computer {
                 }
             Instruction.BXC -> saveToRegister('B', bitwiseXOR(getRegisterValue('B'), getRegisterValue('C')))
             Instruction.OUT -> output.add(comboOperand % 8)
-            Instruction.BDV -> saveToRegister('B', divide(getRegisterValue('A'), 2f.pow(comboOperand).toInt()))
-            Instruction.CDV -> saveToRegister('C', divide(getRegisterValue('A'), 2f.pow(comboOperand).toInt()))
+            Instruction.BDV -> saveToRegister('B', getRegisterValue('A').div(2f.pow(comboOperand).toInt()))
+            Instruction.CDV -> saveToRegister('C', getRegisterValue('A').div(2f.pow(comboOperand).toInt()))
         }
 
         return newCursor ?: (currentCursor + 2)
@@ -70,8 +71,6 @@ private class Computer {
     }
 
     private fun getRegisterValue(register: Char): Int = registers[register]!!.toInt()
-
-    private fun divide(numerator: Int, denominator: Int): Int = numerator / denominator
 
     fun getOutput(): String = output.joinToString(",")
 }
