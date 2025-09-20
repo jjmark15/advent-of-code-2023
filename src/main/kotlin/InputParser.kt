@@ -1,3 +1,3 @@
 interface InputParser<T> {
-    fun parse(input: List<String>): T
+    fun parse(lines: List<String>): T
 }

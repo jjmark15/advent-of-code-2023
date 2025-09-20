@@ -19,8 +19,8 @@ class InputParserImpl : InputParser<ComputerSetup> {
     private val program: Parser<List<Int>> =
         inOrder(str("Program: "), number.joinedWith(",")).map { (_, numbers) -> numbers }
 
-    override fun parse(input: List<String>): ComputerSetup {
-        val lineGroups = input.lineGroups()
+    override fun parse(lines: List<String>): ComputerSetup {
+        val lineGroups = lines.lineGroups()
         return ComputerSetup(lineGroups[0].map { it.parseWith(register) }, lineGroups[1].single().parseWith(program))
     }
 }
