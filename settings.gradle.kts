@@ -9,4 +9,6 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-rootProject.name = "advent-of-code-2023"
+rootProject.name = "advent-of-code"
+
+include("twentythree")
