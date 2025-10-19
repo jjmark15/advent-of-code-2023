@@ -1,3 +1,7 @@
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     kotlin("jvm") version "2.2.20"
     `java-library`
@@ -25,5 +29,18 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(25)
+}
+
+tasks.withType<KotlinJvmCompile> {
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_24)
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+
+    sourceCompatibility = JavaVersion.VERSION_24
+    targetCompatibility = JavaVersion.VERSION_24
 }

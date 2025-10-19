@@ -1,0 +1,7 @@
+[tools]
+"cargo:gw" = "0.2.0"
+java = "temurin-25"
+just = "latest"
+
+[_]
+"$schema" = "https://mise.jdx.dev/schema/mise.json"
