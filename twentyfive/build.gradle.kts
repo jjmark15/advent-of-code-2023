@@ -11,6 +11,7 @@ version = "1.0-SNAPSHOT"
 dependencies {
     implementation(libs.funcj.parser)
     implementation(libs.gatherers4j)
+    implementation(libs.jresult)
 
     implementation(libs.jspecify)
     errorprone(libs.nullaway)

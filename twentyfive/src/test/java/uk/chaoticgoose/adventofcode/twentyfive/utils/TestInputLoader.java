@@ -1,6 +1,7 @@
 package uk.chaoticgoose.adventofcode.twentyfive.utils;
 
-import java.io.IOException;
+import uk.chaoticgoose.jresult.Result;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -11,11 +12,7 @@ public class TestInputLoader {
     public List<String> load(int year, int day, InputDataModifier modifier) {
         var fileName = "/%s/day_%s_data_%s.txt".formatted(year, day, modifier.value());
         Path filePath = Path.of(Objects.requireNonNull(getClass().getResource(fileName)).getPath());
-        try {
-            return Files.readAllLines(filePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return Result.catching(() -> Files.readAllLines(filePath)).mapFailure(RuntimeException::new).valueOrThrow();
     }
 
     public enum InputDataModifier {

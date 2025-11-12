@@ -18,6 +18,7 @@ archunit = { module = "com.tngtech.archunit:archunit", version = "1.4.1" }
 
 funcj-parser = { module = "org.typemeta:funcj-parser", version = "0.6.18" }
 gatherers4j = { module = "com.ginsberg:gatherers4j", version = "0.12.0" }
+jresult = { module = "uk.chaoticgoose:jresult", version = "0.8.0" }
 
 [plugins]
 errorprone = { id = "net.ltgt.errorprone", version = "4.2.0" }
