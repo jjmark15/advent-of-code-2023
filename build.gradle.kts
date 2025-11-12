@@ -1,1 +1,6 @@
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+}
 

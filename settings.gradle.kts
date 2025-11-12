@@ -12,3 +12,4 @@ plugins {
 rootProject.name = "advent-of-code"
 
 include("twentythree")
+include("twentyfive")

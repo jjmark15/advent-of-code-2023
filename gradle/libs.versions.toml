@@ -5,3 +5,19 @@ forkhandles-parser4k = { module = "dev.forkhandles:parser4k" }
 betterparse = { module = "com.github.h0tk3y.betterParse:better-parse", version = "0.4.4" }
 strikt-core = { module = "io.strikt:strikt-core", version = "0.35.1" }
 assertk = { module = "com.willowtreeapps.assertk:assertk", version = "0.28.1" }
+
+assertj = { module = "org.assertj:assertj-core", version = "3.27.6" }
+junit-bom = { module = "org.junit:junit-bom", version = "6.0.1" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+
+errorprone-core = { module = "com.google.errorprone:error_prone_core", version = "2.38.0" }
+nullaway = { module = "com.uber.nullaway:nullaway", version = "0.12.7" }
+jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
+
+archunit = { module = "com.tngtech.archunit:archunit", version = "1.4.1" }
+
+funcj-parser = { module = "org.typemeta:funcj-parser", version = "0.6.18" }
+gatherers4j = { module = "com.ginsberg:gatherers4j", version = "0.12.0" }
+
+[plugins]
+errorprone = { id = "net.ltgt.errorprone", version = "4.2.0" }
