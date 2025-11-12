@@ -15,13 +15,13 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.kittinunf.result:result:5.6.0")
-    implementation(platform("dev.forkhandles:forkhandles-bom:2.22.5.0"))
-    implementation("dev.forkhandles:parser4k")
-    implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
+    implementation(libs.kittinunf.result)
+    implementation(platform(libs.forkhandles.bom))
+    implementation(libs.forkhandles.parser4k)
+    implementation(libs.betterparse)
     testImplementation(kotlin("test"))
-    testImplementation("io.strikt:strikt-core:0.35.1")
-    testImplementation("com.willowtreeapps.assertk:assertk:0.28.1")
+    testImplementation(libs.strikt.core)
+    testImplementation(libs.assertk)
 }
 
 tasks.test {

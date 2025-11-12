@@ -1,0 +1,7 @@
+[libraries]
+kittinunf-result = { module = "com.github.kittinunf.result:result", version = "5.6.0" }
+forkhandles-bom = { module = "dev.forkhandles:forkhandles-bom", version = "2.22.5.0" }
+forkhandles-parser4k = { module = "dev.forkhandles:parser4k" }
+betterparse = { module = "com.github.h0tk3y.betterParse:better-parse", version = "0.4.4" }
+strikt-core = { module = "io.strikt:strikt-core", version = "0.35.1" }
+assertk = { module = "com.willowtreeapps.assertk:assertk", version = "0.28.1" }
