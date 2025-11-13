@@ -4,7 +4,6 @@ import org.jspecify.annotations.NullMarked;
 import org.typemeta.funcj.data.Chr;
 import org.typemeta.funcj.parser.Input;
 import org.typemeta.funcj.parser.Parser;
-import uk.chaoticgoose.adventofcode.twentyfive.day0.Day0Solution.LocationIds;
 import uk.chaoticgoose.adventofcode.twentyfive.utils.Pair;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import static org.typemeta.funcj.parser.Text.intr;
 class InputParser {
     private final Parser<Chr, Pair<Integer>> line = intr.andL(chr(' ').many1()).and(intr).map(Pair::new);
 
-    LocationIds parse(List<String> lines) {
+    Pair<List<Long>> parse(List<String> lines) {
         return lines.stream().map(l -> line.parse(Input.of(l)).getOrThrow())
             .gather(Gatherers.fold(
                 () -> new Pair<ArrayList<Long>>(new ArrayList<>(), new ArrayList<>()),
@@ -28,7 +27,7 @@ class InputParser {
                     return acc;
                 }))
             .findFirst()
-            .map(pair -> new LocationIds(pair.left(), pair.right()))
+            .map(p -> new Pair<List<Long>>(p.left(), p.right()))
             .orElseThrow();
     }
 }
