@@ -10,8 +10,10 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.ginsberg.gatherers4j.Gatherers4j.mapIndexed;
+import static java.util.Objects.requireNonNull;
 import static uk.chaoticgoose.adventofcode.utils.collectors.Collectors.toListOfNullables;
 
 @NullMarked
@@ -71,15 +73,19 @@ public class Grid2D<T> {
             .collect(toListOfNullables()));
     }
 
-    public List<T> valuesMatching(BiPredicate<Point2D, @Nullable T> predicate) {
+    public List<@Nullable T> valuesMatching(BiPredicate<Point2D, @Nullable T> predicate) {
+        return streamIndexed()
+            .filter(t -> predicate.test(requireNonNull(t.left()), t.right()))
+            .map(Tuple::right)
+            .toList();
+    }
+
+    public Stream<Tuple<Point2D, @Nullable T>> streamIndexed() {
         return inner.stream()
             .gather(mapIndexed((rowIndex, row) -> row.stream()
                 .gather(mapIndexed((columnIndex, value) ->
                     new Tuple<>(new Point2D(columnIndex, rowIndex), value)))))
-            .flatMap(s -> s)
-            .filter(t -> predicate.test(t.left(), t.right()))
-            .map(Tuple::right)
-            .toList();
+            .flatMap(s -> s);
     }
 
     private void throwIfNotInGrid(Point2D point) {
