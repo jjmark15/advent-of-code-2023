@@ -20,4 +20,8 @@ public record Position2D(Point2D point, Direction2D direction) {
     public Position2D turned270() {
         return new Position2D(point, direction.rotated270());
     }
+
+    public Position2D turnTo(Direction2D direction) {
+        return new Position2D(point, direction);
+    }
 }
