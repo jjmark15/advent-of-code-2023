@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,5 +81,14 @@ class Grid2DTest {
         Grid2D<String> underTest = Grid2D.ofSize(height, width);
 
         assertThat(underTest.contains(point)).isEqualTo(contained);
+    }
+
+    @Test
+    void matchesValuesWithPredicate() {
+        Grid2D<Integer> underTest = new Grid2D<>(List.of(Arrays.asList(null, 1, 2, 3)));
+
+        List<Integer> result = underTest.valuesMatching((point, v) -> v != null && v > 1 && point.x() < 3);
+
+        assertThat(result).containsExactly(2);
     }
 }
