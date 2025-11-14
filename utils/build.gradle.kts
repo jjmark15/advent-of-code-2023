@@ -10,11 +10,7 @@ group = "chaoticgoose.uk"
 version = "1.0-SNAPSHOT"
 
 dependencies {
-    implementation(libs.funcj.parser)
     implementation(libs.gatherers4j)
-    implementation(libs.jresult)
-
-    implementation(project(":utils"))
 
     implementation(libs.jspecify)
     errorprone(libs.nullaway)
@@ -22,12 +18,16 @@ dependencies {
 
     testImplementation(libs.archunit)
 
+    testFixturesCompileOnly(libs.archunit)
+
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter.params)
+
+    testFixturesCompileOnly(platform(libs.junit.bom))
+    testFixturesCompileOnly(libs.junit.jupiter)
 
     testImplementation(libs.assertj)
-
-    testImplementation(testFixtures(project(":utils")))
 }
 
 tasks.named<Test>("test") {

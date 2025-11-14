@@ -1,4 +1,4 @@
-package uk.chaoticgoose.adventofcode.twentyfive.utils;
+package uk.chaoticgoose.adventofcode.utils;
 
 import org.jspecify.annotations.NullMarked;
 

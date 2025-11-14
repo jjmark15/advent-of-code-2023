@@ -13,3 +13,4 @@ rootProject.name = "advent-of-code"
 
 include("twentythree")
 include("twentyfive")
+include("utils")

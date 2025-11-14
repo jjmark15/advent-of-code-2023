@@ -4,7 +4,7 @@ import org.jspecify.annotations.NullMarked;
 import org.typemeta.funcj.data.Chr;
 import org.typemeta.funcj.parser.Input;
 import org.typemeta.funcj.parser.Parser;
-import uk.chaoticgoose.adventofcode.twentyfive.utils.Pair;
+import uk.chaoticgoose.adventofcode.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

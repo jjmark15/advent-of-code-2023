@@ -1,7 +1,7 @@
 package uk.chaoticgoose.adventofcode.twentyfive.day0;
 
 import org.jspecify.annotations.NullMarked;
-import uk.chaoticgoose.adventofcode.twentyfive.utils.Pair;
+import uk.chaoticgoose.adventofcode.utils.Pair;
 
 import java.util.List;
 
