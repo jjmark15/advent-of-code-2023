@@ -42,15 +42,6 @@ public sealed interface Direction2D {
 
     sealed interface Cardinal extends Direction2D {
 
-        default Cardinal opposite() {
-            return switch (this) {
-                case North _ -> SOUTH;
-                case South _ -> NORTH;
-                case East _ -> WEST;
-                case West _ -> EAST;
-            };
-        }
-
         default Cardinal rotated90() {
             return switch (this) {
                 case North _ -> EAST;
@@ -63,15 +54,6 @@ public sealed interface Direction2D {
 
     sealed interface Intercardinal extends Direction2D {
 
-        default Intercardinal opposite() {
-            return switch (this) {
-                case NorthEast _ -> SOUTH_WEST;
-                case SouthEast _ -> NORTH_WEST;
-                case SouthWest _ -> NORTH_EAST;
-                case NorthWest _ -> SOUTH_EAST;
-            };
-        }
-
         default Intercardinal rotated90() {
             return switch (this) {
                 case NorthEast _ -> SOUTH_EAST;
@@ -82,7 +64,9 @@ public sealed interface Direction2D {
         }
     }
 
-    Direction2D opposite();
+    default Direction2D opposite() {
+        return rotated90().rotated90();
+    }
 
     Direction2D rotated90();
 
