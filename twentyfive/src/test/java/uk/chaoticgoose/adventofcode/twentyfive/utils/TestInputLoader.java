@@ -1,5 +1,6 @@
 package uk.chaoticgoose.adventofcode.twentyfive.utils;
 
+import org.jspecify.annotations.NullMarked;
 import uk.chaoticgoose.jresult.Result;
 
 import java.nio.file.Files;
@@ -15,15 +16,9 @@ public class TestInputLoader {
         return Result.catching(() -> Files.readAllLines(filePath)).mapFailure(RuntimeException::new).valueOrThrow();
     }
 
-    public enum InputDataModifier {
-        SHORT,
-        LONG;
-
-        String value() {
-            return switch (this) {
-                case SHORT -> "short";
-                case LONG -> "long";
-            };
-        }
+    @NullMarked
+    public record InputDataModifier(String value) {
+        public static InputDataModifier SHORT = new InputDataModifier("short");
+        public static InputDataModifier LONG = new InputDataModifier("long");
     }
 }
