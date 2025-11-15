@@ -11,8 +11,8 @@ import static uk.chaoticgoose.adventofcode.utils.mappers.Mappers.mapInner;
 class MappersTest {
     @Test
     void mapsNestedList() {
-        List<List<Integer>> result = Stream.of(List.of(1)).map(mapInner(i -> i + 1)).toList();
+        List<List<Integer>> result = Stream.of(List.of("value")).map(mapInner(String::length)).toList();
 
-        assertThat(result).isEqualTo(List.of(List.of(2)));
+        assertThat(result).isEqualTo(List.of(List.of(5)));
     }
 }
