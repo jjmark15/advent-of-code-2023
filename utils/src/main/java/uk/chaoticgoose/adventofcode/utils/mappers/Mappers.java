@@ -9,7 +9,7 @@ import java.util.function.Function;
 public final class Mappers {
     private Mappers() {}
 
-    public <T, U> Function<List<T>, List<U>> mapInner(Function<T, U> mapper) {
+    public static <T, U> Function<List<T>, List<U>> mapInner(Function<T, U> mapper) {
         return input -> input.stream().map(mapper).toList();
     }
 }
