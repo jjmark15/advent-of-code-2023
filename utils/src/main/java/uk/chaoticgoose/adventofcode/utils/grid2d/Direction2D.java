@@ -3,36 +3,59 @@ package uk.chaoticgoose.adventofcode.utils.grid2d;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public enum Direction2D {
-    North,
-    South,
-    East,
-    West;
+public sealed interface Direction2D {
 
-    public Direction2D opposite() {
-        return switch (this) {
-            case North -> South;
-            case South -> North;
-            case East -> West;
-            case West -> East;
-        };
+    enum North implements Cardinal {
+        Instance
+    }
+    enum South implements Cardinal {
+        Instance
+    }
+    enum East implements Cardinal {
+        Instance
+    }
+    enum West implements Cardinal {
+        Instance
     }
 
-    public Direction2D rotated90() {
-        return switch (this) {
-            case North -> East;
-            case South -> West;
-            case East -> South;
-            case West -> North;
-        };
+    North NORTH = North.Instance;
+    South SOUTH = South.Instance;
+    East EAST = East.Instance;
+    West WEST = West.Instance;
+
+    sealed interface Cardinal extends Direction2D {
+
+        default Cardinal opposite() {
+            return switch (this) {
+                case North _ -> SOUTH;
+                case South _ -> NORTH;
+                case East _ -> WEST;
+                case West _ -> EAST;
+            };
+        }
+
+        default Cardinal rotated90() {
+            return switch (this) {
+                case North _ -> EAST;
+                case South _ -> WEST;
+                case East _ -> SOUTH;
+                case West _ -> NORTH;
+            };
+        }
+
+        default Cardinal rotated270() {
+            return switch (this) {
+                case North _ -> WEST;
+                case South _ -> EAST;
+                case East _ -> NORTH;
+                case West _ -> SOUTH;
+            };
+        }
     }
 
-    public Direction2D rotated270() {
-        return switch (this) {
-            case North -> West;
-            case South -> East;
-            case East -> North;
-            case West -> South;
-        };
-    }
+    Direction2D opposite();
+
+    Direction2D rotated90();
+
+    Direction2D rotated270();
 }

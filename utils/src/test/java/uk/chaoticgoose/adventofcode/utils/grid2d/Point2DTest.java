@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static uk.chaoticgoose.adventofcode.utils.grid2d.Direction2D.*;
+import static uk.chaoticgoose.adventofcode.utils.grid2d.Direction2D.NORTH;
 
 class Point2DTest {
     @ParameterizedTest
@@ -20,10 +22,10 @@ class Point2DTest {
 
     private static Stream<Arguments> movesInDirection() {
         return Stream.of(
-            arguments(0, 1, Direction2D.North, 0, 0),
-            arguments(0, 0, Direction2D.South, 0, 1),
-            arguments(0, 0, Direction2D.East, 1, 0),
-            arguments(1, 0, Direction2D.West, 0, 0)
+            arguments(0, 1, NORTH, 0, 0),
+            arguments(0, 0, SOUTH, 0, 1),
+            arguments(0, 0, EAST, 1, 0),
+            arguments(1, 0, WEST, 0, 0)
         );
     }
 
