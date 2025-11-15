@@ -9,8 +9,8 @@ public record Point2D(int x, int y) {
 
     public Point2D toThe(Direction2D direction) {
         return switch (direction) {
-            case North -> new Point2D(x, y + 1);
-            case South -> new Point2D(x, y - 1);
+            case North -> new Point2D(x, y - 1);
+            case South -> new Point2D(x, y + 1);
             case East -> new Point2D(x + 1, y);
             case West -> new Point2D(x - 1, y);
         };
