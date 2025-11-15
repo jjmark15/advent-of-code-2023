@@ -34,15 +34,17 @@ public abstract class AbstractNullnessTest {
     @Test
     void annotateClassesWithNullMarked() {
         classes()
-            .that().arePublic()
+            .that().areNotPrivate()
+            .and().areNotAnonymousClasses()
             .and().areNotAnnotatedWith(NotNullMarked.class)
             .should().beAnnotatedWith(NullMarked.class)
-            .allowEmptyShould(true).check(targetClasses());
+            .check(targetClasses());
     }
 
     @Test
     void nullableReturnMethodsMustFollowNamingConvention() {
-        methods().that().arePublic()
+        methods()
+            .that().areNotPrivate()
             .and().areDeclaredInClassesThat().areNotRecords()
             .and().haveNameNotEndingWith("OrNull")
             .should(not(beAnnotatedWithNullable))
