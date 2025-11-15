@@ -35,7 +35,9 @@ public abstract class AbstractNullnessTest {
     void annotateClassesWithNullMarked() {
         classes()
             .that().arePublic()
-            .should().beAnnotatedWith(NullMarked.class).check(targetClasses());
+            .and().areNotAnnotatedWith(NotNullMarked.class)
+            .should().beAnnotatedWith(NullMarked.class)
+            .allowEmptyShould(true).check(targetClasses());
     }
 
     @Test

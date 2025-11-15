@@ -1,8 +1,7 @@
 package uk.chaoticgoose.adventofcode.utils;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+@NotNullMarked
 public record Pair<T extends @Nullable Object>(T left, T right) {
 }
