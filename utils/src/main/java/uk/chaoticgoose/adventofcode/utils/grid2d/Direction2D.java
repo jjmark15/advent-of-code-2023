@@ -33,9 +33,9 @@ public sealed interface Direction2D {
 
     North NORTH = North.Instance;
     NorthEast NORTH_EAST = NorthEast.Instance;
-    South SOUTH = South.Instance;
-    SouthEast SOUTH_EAST = SouthEast.Instance;
     East EAST = East.Instance;
+    SouthEast SOUTH_EAST = SouthEast.Instance;
+    South SOUTH = South.Instance;
     SouthWest SOUTH_WEST = SouthWest.Instance;
     West WEST = West.Instance;
     NorthWest NORTH_WEST = NorthWest.Instance;
