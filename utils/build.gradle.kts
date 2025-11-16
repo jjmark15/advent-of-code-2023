@@ -23,6 +23,7 @@ dependencies {
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.params)
+    testRuntimeOnly(libs.junit.launcher)
 
     testFixturesCompileOnly(platform(libs.junit.bom))
     testFixturesCompileOnly(libs.junit.jupiter)
