@@ -1,7 +1,13 @@
 package uk.chaoticgoose.adventofcode.utils;
 
-import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
-@NotNullMarked
-public record Tuple<T extends @Nullable Object, U extends @Nullable Object>(T left, U right) {
+import static java.util.Objects.requireNonNull;
+
+@NullMarked
+public record Tuple<T, U>(T left, U right) {
+    public Tuple {
+        requireNonNull(left);
+        requireNonNull(right);
+    }
 }

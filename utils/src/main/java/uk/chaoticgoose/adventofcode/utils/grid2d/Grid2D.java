@@ -2,7 +2,6 @@ package uk.chaoticgoose.adventofcode.utils.grid2d;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
-import uk.chaoticgoose.adventofcode.utils.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.ginsberg.gatherers4j.Gatherers4j.mapIndexed;
-import static java.util.Objects.requireNonNull;
 import static uk.chaoticgoose.adventofcode.utils.collectors.Collectors.toListOfNullables;
 
 @NullMarked
@@ -75,16 +73,16 @@ public class Grid2D<T> {
 
     public List<@Nullable T> valuesMatching(BiPredicate<Point2D, @Nullable T> predicate) {
         return streamIndexed()
-            .filter(t -> predicate.test(requireNonNull(t.left()), t.right()))
-            .map(Tuple::right)
+            .filter(pv -> predicate.test(pv.point(), pv.value()))
+            .map(PointAndValue::value)
             .toList();
     }
 
-    public Stream<Tuple<Point2D, @Nullable T>> streamIndexed() {
+    public Stream<PointAndValue<T>> streamIndexed() {
         return inner.stream()
             .gather(mapIndexed((rowIndex, row) -> row.stream()
                 .gather(mapIndexed((columnIndex, value) ->
-                    new Tuple<>(new Point2D(columnIndex, rowIndex), value)))))
+                    new PointAndValue<T>(new Point2D(columnIndex, rowIndex), value)))))
             .flatMap(s -> s);
     }
 

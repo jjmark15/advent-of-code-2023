@@ -1,6 +1,7 @@
 package uk.chaoticgoose.adventofcode.utils.grid2d;
 
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -87,7 +88,7 @@ class Grid2DTest {
     void matchesValuesWithPredicate() {
         Grid2D<Integer> underTest = new Grid2D<>(List.of(Arrays.asList(null, 1, 2, 3)));
 
-        List<Integer> result = underTest.valuesMatching((point, v) -> v != null && v > 1 && point.x() < 3);
+        List<@Nullable Integer> result = underTest.valuesMatching((point, v) -> v != null && v > 1 && point.x() < 3);
 
         assertThat(result).containsExactly(2);
     }
