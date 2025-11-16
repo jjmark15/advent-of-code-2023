@@ -6,47 +6,47 @@ import org.jspecify.annotations.NullMarked;
 public sealed interface Direction2D {
 
     @NullMarked
-    enum North implements Cardinal {
-        Instance
+    final class North implements Cardinal {
+        private North() {}
     }
     @NullMarked
-    enum South implements Cardinal {
-        Instance
+    final class South implements Cardinal {
+        private South() {}
     }
     @NullMarked
-    enum East implements Cardinal {
-        Instance
+    final class East implements Cardinal {
+        private East() {}
     }
     @NullMarked
-    enum West implements Cardinal {
-        Instance
+    final class West implements Cardinal {
+        private West() {}
     }
 
     @NullMarked
-    enum NorthEast implements Intercardinal {
-        Instance
+    final class NorthEast implements Intercardinal {
+        private NorthEast() {}
     }
     @NullMarked
-    enum SouthEast implements Intercardinal {
-        Instance
+    final class SouthEast implements Intercardinal {
+        private SouthEast() {}
     }
     @NullMarked
-    enum SouthWest implements Intercardinal {
-        Instance
+    final class SouthWest implements Intercardinal {
+        private SouthWest() {}
     }
     @NullMarked
-    enum NorthWest implements Intercardinal {
-        Instance
+    final class NorthWest implements Intercardinal {
+        private NorthWest() {}
     }
 
-    North NORTH = North.Instance;
-    NorthEast NORTH_EAST = NorthEast.Instance;
-    East EAST = East.Instance;
-    SouthEast SOUTH_EAST = SouthEast.Instance;
-    South SOUTH = South.Instance;
-    SouthWest SOUTH_WEST = SouthWest.Instance;
-    West WEST = West.Instance;
-    NorthWest NORTH_WEST = NorthWest.Instance;
+    North NORTH = new North();
+    NorthEast NORTH_EAST = new NorthEast();
+    East EAST = new East();
+    SouthEast SOUTH_EAST = new SouthEast();
+    South SOUTH = new South();
+    SouthWest SOUTH_WEST = new SouthWest();
+    West WEST = new West();
+    NorthWest NORTH_WEST = new NorthWest();
 
     @NullMarked
     sealed interface Cardinal extends Direction2D {
