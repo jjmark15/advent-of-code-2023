@@ -5,28 +5,36 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public sealed interface Direction2D {
 
+    @NullMarked
     enum North implements Cardinal {
         Instance
     }
+    @NullMarked
     enum South implements Cardinal {
         Instance
     }
+    @NullMarked
     enum East implements Cardinal {
         Instance
     }
+    @NullMarked
     enum West implements Cardinal {
         Instance
     }
 
+    @NullMarked
     enum NorthEast implements Intercardinal {
         Instance
     }
+    @NullMarked
     enum SouthEast implements Intercardinal {
         Instance
     }
+    @NullMarked
     enum SouthWest implements Intercardinal {
         Instance
     }
+    @NullMarked
     enum NorthWest implements Intercardinal {
         Instance
     }
@@ -40,6 +48,7 @@ public sealed interface Direction2D {
     West WEST = West.Instance;
     NorthWest NORTH_WEST = NorthWest.Instance;
 
+    @NullMarked
     sealed interface Cardinal extends Direction2D {
 
         default Cardinal rotated90() {
@@ -52,6 +61,7 @@ public sealed interface Direction2D {
         }
     }
 
+    @NullMarked
     sealed interface Intercardinal extends Direction2D {
 
         default Intercardinal rotated90() {
