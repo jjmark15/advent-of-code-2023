@@ -8,6 +8,8 @@ import java.util.stream.Gatherer;
 
 @NullMarked
 public final class Gatherers {
+    
+    private Gatherers() {}
 
     public static <T extends @Nullable Object, R> Gatherer<T, Void, R> mapNonNull(final Function<T, @Nullable R> mapper) {
         return Gatherer.of(
