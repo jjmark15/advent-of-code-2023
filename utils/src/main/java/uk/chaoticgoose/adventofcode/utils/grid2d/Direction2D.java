@@ -75,6 +75,10 @@ public sealed interface Direction2D {
     }
 
     default Direction2D opposite() {
+        return rotated180();
+    }
+
+    default Direction2D rotated180() {
         return rotated90().rotated90();
     }
 
