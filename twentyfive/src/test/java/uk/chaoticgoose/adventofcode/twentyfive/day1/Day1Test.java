@@ -25,6 +25,16 @@ class Day1Test {
         assertThat(underTest.part1(inputParser.parse(data(LONG)))).isEqualTo(1048L);
     }
 
+    @Test
+    void part2Short() {
+        assertThat(underTest.part2(inputParser.parse(data(SHORT)))).isEqualTo(6L);
+    }
+
+    @Test
+    void part2Long() {
+        assertThat(underTest.part2(inputParser.parse(data(LONG)))).isEqualTo(6498L);
+    }
+
     private List<String> data(InputDataModifier inputDataModifier) {
         return testInputLoader.load(2025, 1, inputDataModifier);
     }
