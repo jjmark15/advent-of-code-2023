@@ -12,7 +12,7 @@ public final class Collectors {
     private Collectors() {}
 
     public static <T> Collector<@Nullable T, ?, List<@Nullable T>> toListOfNullables() {
-        return Collector.of(
+        return Collector.<@Nullable T, List<@Nullable T>>of(
             ArrayList::new,
             List::add,
             (left, right) -> {

@@ -74,7 +74,7 @@ public class Grid2D<T> {
     public List<@Nullable T> valuesMatching(BiPredicate<Point2D, @Nullable T> predicate) {
         return streamIndexed()
             .filter(pv -> predicate.test(pv.point(), pv.value()))
-            .map(PointAndValue::value)
+            .<@Nullable T>map(PointAndValue::value)
             .toList();
     }
 

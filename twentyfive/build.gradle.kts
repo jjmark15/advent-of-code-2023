@@ -48,6 +48,7 @@ tasks.withType<JavaCompile>().configureEach {
     options.errorprone {
         disableAllChecks = true // Other errorprone checks are disabled
         option("NullAway:OnlyNullMarked", "true") // Enable nullness checks only in null-marked code
+        option("NullAway:JSpecifyMode", "true")
         error("NullAway", "RequireExplicitNullMarking") // bump checks from warnings (default) to errors
     }
     if (name.lowercase().contains("test")) {
