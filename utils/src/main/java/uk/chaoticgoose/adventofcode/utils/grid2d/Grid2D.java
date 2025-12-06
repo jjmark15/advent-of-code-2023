@@ -1,6 +1,5 @@
 package uk.chaoticgoose.adventofcode.utils.grid2d;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.stream.Stream;
 import static com.ginsberg.gatherers4j.Gatherers4j.mapIndexed;
 import static uk.chaoticgoose.adventofcode.utils.collectors.Collectors.toListOfNullables;
 
-@NullMarked
 public class Grid2D<T> {
     private final ArrayList<ArrayList<@Nullable T>> inner;
     private final int height;

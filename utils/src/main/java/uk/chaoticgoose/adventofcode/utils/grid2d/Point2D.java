@@ -1,14 +1,10 @@
 package uk.chaoticgoose.adventofcode.utils.grid2d;
 
-import org.jspecify.annotations.NullMarked;
-
 import java.util.List;
 import java.util.stream.Stream;
 
 import static uk.chaoticgoose.adventofcode.utils.grid2d.Direction2D.*;
-import static uk.chaoticgoose.adventofcode.utils.grid2d.Direction2D.WEST;
 
-@NullMarked
 public record Point2D(int x, int y) {
 
     public Point2D toThe(Direction2D direction) {

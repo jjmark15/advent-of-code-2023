@@ -1,11 +1,8 @@
 package uk.chaoticgoose.adventofcode.utils.mappers;
 
-import org.jspecify.annotations.NullMarked;
-
 import java.util.List;
 import java.util.function.Function;
 
-@NullMarked
 public final class Mappers {
     private Mappers() {}
 

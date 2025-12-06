@@ -1,8 +1,5 @@
 package uk.chaoticgoose.adventofcode.utils.grid2d;
 
-import org.jspecify.annotations.NullMarked;
-
-@NullMarked
 public record Position2D(Point2D point, Direction2D direction) {
 
     public Position2D ahead() {

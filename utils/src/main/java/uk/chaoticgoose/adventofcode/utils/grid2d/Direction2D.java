@@ -1,40 +1,29 @@
 package uk.chaoticgoose.adventofcode.utils.grid2d;
 
-import org.jspecify.annotations.NullMarked;
-
-@NullMarked
 public sealed interface Direction2D {
 
-    @NullMarked
     final class North implements Cardinal {
         private North() {}
     }
-    @NullMarked
     final class South implements Cardinal {
         private South() {}
     }
-    @NullMarked
     final class East implements Cardinal {
         private East() {}
     }
-    @NullMarked
     final class West implements Cardinal {
         private West() {}
     }
 
-    @NullMarked
     final class NorthEast implements Intercardinal {
         private NorthEast() {}
     }
-    @NullMarked
     final class SouthEast implements Intercardinal {
         private SouthEast() {}
     }
-    @NullMarked
     final class SouthWest implements Intercardinal {
         private SouthWest() {}
     }
-    @NullMarked
     final class NorthWest implements Intercardinal {
         private NorthWest() {}
     }
@@ -48,7 +37,6 @@ public sealed interface Direction2D {
     West WEST = new West();
     NorthWest NORTH_WEST = new NorthWest();
 
-    @NullMarked
     sealed interface Cardinal extends Direction2D {
 
         default Cardinal rotated90() {
@@ -61,7 +49,6 @@ public sealed interface Direction2D {
         }
     }
 
-    @NullMarked
     sealed interface Intercardinal extends Direction2D {
 
         default Intercardinal rotated90() {

@@ -1,13 +1,11 @@
 package uk.chaoticgoose.adventofcode.utils.collectors;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
 
-@NullMarked
 public final class Collectors {
     private Collectors() {}
 
