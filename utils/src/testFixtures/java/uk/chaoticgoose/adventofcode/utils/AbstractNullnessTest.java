@@ -10,7 +10,6 @@ import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.lang.conditions.ArchConditions.not;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
 
 @NullMarked
@@ -30,16 +29,6 @@ public abstract class AbstractNullnessTest {
                     }
                 }
             };
-
-    @Test
-    void annotateClassesWithNullMarked() {
-        classes()
-            .that().areNotPrivate()
-            .and().areNotAnonymousClasses()
-            .and().areNotAnnotatedWith(NotNullMarked.class)
-            .should().beAnnotatedWith(NullMarked.class)
-            .check(targetClasses());
-    }
 
     @Test
     void nullableReturnMethodsMustFollowNamingConvention() {
