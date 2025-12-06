@@ -6,18 +6,28 @@ import java.util.stream.Stream;
 
 class DaySolution {
     long part1(List<IdRange> input) {
-        return input.stream().flatMap(this::invalidIds).mapToLong(Long::longValue).sum();
+        return input.stream().flatMap(this::toIds).filter(this::isSingleRepeat).mapToLong(Long::longValue).sum();
     }
 
-    private Stream<Long> invalidIds(IdRange r) {
-        return LongStream.rangeClosed(r.start(), r.endInclusive()).boxed().filter(this::isInvalidId);
+    long part2(List<IdRange> input) {
+        return input.stream().flatMap(this::toIds).filter(this::isOnlyRepeat).mapToLong(Long::longValue).sum();
     }
 
-    private boolean isInvalidId(long n) {
+    private Stream<Long> toIds(IdRange r) {
+        return LongStream.rangeClosed(r.start(), r.endInclusive()).boxed();
+    }
+
+    private boolean isSingleRepeat(long n) {
         String nString = Long.toString(n);
 
         if (nString.length() % 2 != 0) return false;
 
         return nString.substring(0, nString.length() / 2).equals(nString.substring(nString.length() / 2));
+    }
+
+    private boolean isOnlyRepeat(long n) {
+        String nString = Long.toString(n);
+        String trimmedRepeat = nString.repeat(2).substring(1, nString.length() * 2 - 1);
+        return trimmedRepeat.contains(nString);
     }
 }
