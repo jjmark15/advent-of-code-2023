@@ -8,11 +8,14 @@ import uk.chaoticgoose.adventofcode.utils.Tuple;
 
 import java.util.List;
 
+import static org.typemeta.funcj.parser.Parser.choice;
 import static org.typemeta.funcj.parser.Text.*;
 
 class InputParser {
-    private final Parser<Chr, List<Long>> numberLineParser = lng.sepBy(ws.many()).map(IList::toList);
-    private final Parser<Chr, Operator> operatorParser = chr('+').or(chr('*')).map(s -> parseOperator(s.charValue()));
+    private final Parser<Chr, List<Long>> numberLineParser = ws.many().andR(lng.sepBy(ws.many())).map(IList::toList);
+    private final Parser<Chr, Operator> operatorParser = ws.many()
+        .andR(choice(chr('+'), chr('*')))
+        .map(s -> parseOperator(s.charValue()));
     private final Parser<Chr, List<Operator>> operatorLineParser = operatorParser.sepBy(ws.many()).map(IList::toList);
 
     Tuple<List<List<Long>>, List<Operator>> parse(List<String> lines) {
