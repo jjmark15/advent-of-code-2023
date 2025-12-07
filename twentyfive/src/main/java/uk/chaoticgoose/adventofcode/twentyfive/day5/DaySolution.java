@@ -4,6 +4,7 @@ import uk.chaoticgoose.adventofcode.utils.Tuple;
 
 import java.util.List;
 
+import static java.lang.Math.max;
 import static java.util.Comparator.comparing;
 
 class DaySolution {
@@ -29,6 +30,28 @@ class DaySolution {
 
                 offset++;
             }
+        }
+
+        return freshIngredients;
+    }
+
+    long part2(Tuple<List<NumberRange>, List<Long>> input) {
+        var numberRanges = input.left().stream().sorted(comparing(NumberRange::start)).toList();
+
+        long freshIngredients = 0;
+
+        long previousHighestFreshIngredient = 0;
+
+        for (var numberRange : numberRanges) {
+            long start = max(numberRange.start(), previousHighestFreshIngredient + 1);
+
+            if (start > numberRange.end()) {
+                continue;
+            }
+
+            previousHighestFreshIngredient = numberRange.end();
+
+            freshIngredients += numberRange.end() - start + 1;
         }
 
         return freshIngredients;
