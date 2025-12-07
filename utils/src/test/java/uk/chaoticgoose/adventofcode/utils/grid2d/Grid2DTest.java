@@ -45,16 +45,6 @@ class Grid2DTest {
         assertThat(underTest.get(new Point2D(0, 0))).hasValue("value2");
     }
 
-    @Test
-    void removesValues() {
-        Grid2D<String> underTest = Grid2D.ofSize(1, 1);
-        underTest.set(new Point2D(0, 0), "value");
-
-        underTest.remove(new Point2D(0, 0));
-
-        assertThat(underTest.get(new Point2D(0, 0))).isEmpty();
-    }
-
     private static Stream<Arguments> containsPointsInGrid() {
         return Stream.of(
             arguments(0, 0, new Point2D(-1, -1), false),
@@ -86,7 +76,7 @@ class Grid2DTest {
 
     @Test
     void matchesValuesWithPredicate() {
-        Grid2D<Integer> underTest = new Grid2D<>(List.of(Arrays.asList(null, 1, 2, 3)));
+        Grid2D<@Nullable Integer> underTest = new Grid2D<>(List.of(Arrays.asList(null, 1, 2, 3)));
 
         List<@Nullable Integer> result = underTest.valuesMatching((point, v) -> v != null && v > 1 && point.x() < 3);
 

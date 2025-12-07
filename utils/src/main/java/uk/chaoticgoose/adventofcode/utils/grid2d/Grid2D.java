@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import static com.ginsberg.gatherers4j.Gatherers4j.mapIndexed;
 import static uk.chaoticgoose.adventofcode.utils.collectors.Collectors.toListOfNullables;
 
-public class Grid2D<T> {
+public class Grid2D<T extends @Nullable Object> {
     private final ArrayList<ArrayList<@Nullable T>> inner;
     private final int height;
     private final int width;
@@ -54,11 +54,7 @@ public class Grid2D<T> {
         return 0 <= point.y() && height > point.y() && 0 <= point.x() && width > point.x();
     }
 
-    public void remove(Point2D point) {
-        this.set(point, null);
-    }
-
-    public void set(Point2D point, @Nullable T value) {
+    public void set(Point2D point, T value) {
         throwIfNotInGrid(point);
         this.inner.get(point.y()).set(point.x(), value);
     }
@@ -69,10 +65,10 @@ public class Grid2D<T> {
             .collect(toListOfNullables()));
     }
 
-    public List<@Nullable T> valuesMatching(BiPredicate<Point2D, @Nullable T> predicate) {
+    public List<T> valuesMatching(BiPredicate<Point2D, T> predicate) {
         return streamIndexed()
             .filter(pv -> predicate.test(pv.point(), pv.value()))
-            .<@Nullable T>map(PointAndValue::value)
+            .map(PointAndValue::value)
             .toList();
     }
 
@@ -80,7 +76,7 @@ public class Grid2D<T> {
         return inner.stream()
             .gather(mapIndexed((rowIndex, row) -> row.stream()
                 .gather(mapIndexed((columnIndex, value) ->
-                    new PointAndValue<T>(new Point2D(columnIndex, rowIndex), value)))))
+                    new PointAndValue<>(new Point2D(columnIndex, rowIndex), value)))))
             .flatMap(s -> s);
     }
 
