@@ -72,6 +72,13 @@ public class Grid2D<T extends @Nullable Object> {
             .toList();
     }
 
+    public List<Point2D> pointsMatching(BiPredicate<Point2D, T> predicate) {
+        return streamIndexed()
+            .filter(pv -> predicate.test(pv.point(), pv.value()))
+            .map(PointAndValue::point)
+            .toList();
+    }
+
     public Stream<PointAndValue<T>> streamIndexed() {
         return inner.stream()
             .gather(mapIndexed((rowIndex, row) -> row.stream()
