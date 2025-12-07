@@ -10,6 +10,10 @@ class DaySolution {
         return transpose(input.left(), input.right()).stream().mapToLong(this::calculate).sum();
     }
 
+    long part2(List<MathExpression> input) {
+        return input.stream().mapToLong(this::calculate).sum();
+    }
+
     private List<MathExpression> transpose(List<List<Long>> rows, List<Operator> operators) {
         return IntStream.range(0, operators.size())
             .mapToObj(i -> {
