@@ -7,15 +7,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Gatherers;
 
+import static java.util.stream.Gatherers.fold;
+
 class DaySolution {
     long part1(List<BatteryBank> input) {
         return input.stream().mapToLong(bank -> maximumJoltage(bank, 2)).sum();
     }
 
-    private int maximumJoltage(BatteryBank bank, int batteryCount) {
+    long part2(List<BatteryBank> input) {
+        return input.stream().mapToLong(bank -> maximumJoltage(bank, 12)).sum();
+    }
+
+    private long maximumJoltage(BatteryBank bank, int batteryCount) {
         return bank.batteries().stream()
             .gather(Gatherers.windowSliding(batteryCount))
-            .gather(Gatherers.fold(
+            .gather(fold(
                 () -> new ArrayList<>(Arrays.asList(new Integer[batteryCount])),
                 (state, window) -> {
 
@@ -35,6 +41,7 @@ class DaySolution {
             .findFirst()
             .orElseThrow()
             .stream()
-            .reduce(0, (acc, n) -> acc * 10 + n);
+            .gather(fold(() -> 0L, (acc, n) -> acc * 10 + n))
+            .findFirst().orElseThrow();
     }
 }
