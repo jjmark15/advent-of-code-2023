@@ -1,34 +1,40 @@
 package uk.chaoticgoose.adventofcode.twentyfive.day3;
 
-import uk.chaoticgoose.adventofcode.utils.Pair;
+import uk.chaoticgoose.adventofcode.utils.ListUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import static java.util.stream.Gatherers.fold;
-import static java.util.stream.Gatherers.windowSliding;
+import java.util.stream.Gatherers;
 
 class DaySolution {
     long part1(List<BatteryBank> input) {
-        return input.stream().mapToLong(this::maximumJoltage).sum();
+        return input.stream().mapToLong(bank -> maximumJoltage(bank, 2)).sum();
     }
 
-    private int maximumJoltage(BatteryBank bank) {
-        Pair<Integer> batteryPair = bank.batteries().stream().gather(windowSliding(2)).gather(fold(
-            () -> new Pair<>(0, 0),
-            (state, window) -> {
-                var curr = window.get(0);
-                var next = window.get(1);
+    private int maximumJoltage(BatteryBank bank, int batteryCount) {
+        return bank.batteries().stream()
+            .gather(Gatherers.windowSliding(batteryCount))
+            .gather(Gatherers.fold(
+                () -> new ArrayList<>(Arrays.asList(new Integer[batteryCount])),
+                (state, window) -> {
 
-                if (curr > state.left()) {
-                    return new Pair<>(curr, next);
-                }
+                    for (int i = 0; i < window.size(); i++) {
+                        var old = ListUtils.get(state, i).orElse(0);
+                        var option = window.get(i);
+                        if (old < option) {
+                            for (int j = i; j < window.size(); j++) {
+                                state.set(j, window.get(j));
+                            }
+                            return state;
+                        }
+                    }
 
-                if (next > state.right()) {
-                    return new Pair<>(state.left(), next);
-                }
-
-                return state;
-            })).findFirst().orElseThrow();
-        return batteryPair.left() * 10 + batteryPair.right();
+                    return state;
+                }))
+            .findFirst()
+            .orElseThrow()
+            .stream()
+            .reduce(0, (acc, n) -> acc * 10 + n);
     }
 }
