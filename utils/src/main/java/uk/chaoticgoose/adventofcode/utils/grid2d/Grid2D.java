@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.ginsberg.gatherers4j.Gatherers4j.mapIndexed;
+import static java.util.stream.Collectors.joining;
 import static uk.chaoticgoose.adventofcode.utils.collectors.Collectors.toListOfNullables;
 
 public class Grid2D<T extends @Nullable Object> {
@@ -91,5 +92,12 @@ public class Grid2D<T extends @Nullable Object> {
         if (!contains(point)) {
             throw new IllegalArgumentException("point y: %s x: %s is not in the grid".formatted(point.y(), point.x()));
         }
+    }
+
+    @SuppressWarnings("unused")
+    public String debugString(Function<T, String> mapper) {
+        return inner.stream()
+            .map(line -> line.stream().map(mapper).collect(joining()))
+            .collect(joining("\n"));
     }
 }

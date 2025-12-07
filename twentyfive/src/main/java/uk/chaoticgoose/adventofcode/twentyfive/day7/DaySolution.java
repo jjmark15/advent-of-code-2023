@@ -76,4 +76,9 @@ class DaySolution {
         pathCounts.put(point, count);
         return count;
     }
+
+    @SuppressWarnings("unused")
+    private String debugMap(Grid2D<DiagramElement> grid) {
+        return grid.debugString(DiagramElement::debug);
+    }
 }
