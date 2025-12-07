@@ -13,16 +13,16 @@ import static uk.chaoticgoose.adventofcode.twentyfive.utils.TestInputLoader.Inpu
 class Day0Test {
     private final TestInputLoader testInputLoader = new TestInputLoader();
     private final InputParser inputParser = new InputParser();
-    private final Day0Solution underTest = new Day0Solution();
+    private final DaySolution underTest = new DaySolution();
 
     @Test
     void part1Short() {
-        assertThat(underTest.part1(inputParser.parse(data(SHORT)))).isEqualTo(11L);
+        assertThat(underTest.part1(inputParser.parse(data(SHORT)))).isEqualTo(0L);
     }
 
     @Test
     void part1Long() {
-        assertThat(underTest.part1(inputParser.parse(data(LONG)))).isEqualTo(2430334L);
+        assertThat(underTest.part1(inputParser.parse(data(LONG)))).isEqualTo(0L);
     }
 
     private List<String> data(InputDataModifier inputDataModifier) {

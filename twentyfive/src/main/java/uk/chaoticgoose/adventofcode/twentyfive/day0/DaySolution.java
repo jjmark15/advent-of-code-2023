@@ -2,8 +2,8 @@ package uk.chaoticgoose.adventofcode.twentyfive.day0;
 
 import java.util.List;
 
-class InputParser {
-    List<String> parse(List<String> lines) {
+class DaySolution {
+    long part1(List<String> ignore) {
         throw new RuntimeException("not yet implemented");
     }
 }
