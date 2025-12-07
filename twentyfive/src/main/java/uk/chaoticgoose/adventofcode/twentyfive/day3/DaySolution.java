@@ -5,9 +5,9 @@ import uk.chaoticgoose.adventofcode.utils.ListUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Gatherers;
 
 import static java.util.stream.Gatherers.fold;
+import static java.util.stream.Gatherers.windowSliding;
 
 class DaySolution {
     long part1(List<BatteryBank> input) {
@@ -20,7 +20,7 @@ class DaySolution {
 
     private long maximumJoltage(BatteryBank bank, int batteryCount) {
         return bank.batteries().stream()
-            .gather(Gatherers.windowSliding(batteryCount))
+            .gather(windowSliding(batteryCount))
             .gather(fold(
                 () -> new ArrayList<>(Arrays.asList(new Integer[batteryCount])),
                 (state, window) -> {
