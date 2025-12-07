@@ -19,7 +19,7 @@ class Grid2DTest {
 
     @Test
     void fillsWithNullsWhenCreatedFromSize() {
-        Grid2D<String> underTest = Grid2D.ofSize(1, 1);
+        Grid2D<@Nullable String> underTest = Grid2D.ofSize(1, 1, null);
 
         assertThat(underTest.get(new Point2D(0, 0))).isEmpty();
         assertThat(underTest.getOrNull(new Point2D(0, 0))).isNull();
@@ -27,8 +27,7 @@ class Grid2DTest {
 
     @Test
     void mapsValues() {
-        Grid2D<String> underTest = Grid2D.ofSize(1, 1);
-        underTest.set(new Point2D(0, 0), "value");
+        Grid2D<String> underTest = Grid2D.ofSize(1, 1, "value");
 
         Grid2D<Integer> result = underTest.map(String::length);
 
@@ -37,7 +36,7 @@ class Grid2DTest {
 
     @Test
     void setsValues() {
-        Grid2D<String> underTest = Grid2D.ofSize(1, 1);
+        Grid2D<@Nullable String> underTest = Grid2D.ofSize(1, 1, null);
         underTest.set(new Point2D(0, 0), "value1");
 
         underTest.set(new Point2D(0, 0), "value2");
@@ -69,7 +68,7 @@ class Grid2DTest {
     @ParameterizedTest
     @MethodSource
     void containsPointsInGrid(int height, int width, Point2D point, boolean contained) {
-        Grid2D<String> underTest = Grid2D.ofSize(height, width);
+        Grid2D<@Nullable String> underTest = Grid2D.ofSize(height, width, null);
 
         assertThat(underTest.contains(point)).isEqualTo(contained);
     }
