@@ -26,6 +26,6 @@ class Day0Test {
     }
 
     private List<String> data(InputDataModifier inputDataModifier) {
-        return testInputLoader.load(2025, 0, inputDataModifier);
+        return testInputLoader.load(0, inputDataModifier);
     }
 }

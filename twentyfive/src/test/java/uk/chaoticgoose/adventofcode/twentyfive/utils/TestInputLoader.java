@@ -9,8 +9,8 @@ import java.util.Objects;
 
 public class TestInputLoader {
 
-    public List<String> load(int year, int day, InputDataModifier modifier) {
-        var fileName = "/%s/day_%s_data_%s.txt".formatted(year, day, modifier.value());
+    public List<String> load(int day, InputDataModifier modifier) {
+        var fileName = "/data/%s_%s.txt".formatted(day, modifier.value());
         Path filePath = Path.of(Objects.requireNonNull(getClass().getResource(fileName)).getPath());
         return Result.catching(() -> Files.readAllLines(filePath)).mapFailure(RuntimeException::new).valueOrThrow();
     }
