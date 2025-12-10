@@ -32,7 +32,7 @@ public class Grid2D<T extends @Nullable Object> {
         }
     }
 
-    public static <T extends @Nullable Object> Grid2D<T> ofSize(int height, int width, T defaultValue) {
+    public static <T extends @Nullable Object> Grid2D<T> ofSize(int width, int height, T defaultValue) {
         return new Grid2D<>(IntStream.range(0, height)
             .mapToObj(_ -> IntStream.range(0, width).mapToObj(_ -> defaultValue).collect(toListOfNullables()))
             .toList());
