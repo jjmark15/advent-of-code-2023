@@ -2,7 +2,10 @@ package uk.chaoticgoose.adventofcode.twentyfive.day8;
 
 import com.ginsberg.gatherers4j.dto.WithIndex;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import static com.ginsberg.gatherers4j.Gatherers4j.withIndex;
 import static java.util.Collections.unmodifiableList;
@@ -13,9 +16,11 @@ import static java.util.function.Predicate.not;
 class Grid3D {
     private final LinkedList<HashSet<Position3D>> circuits = new LinkedList<>();
     private final List<PositionsAndDistance> inner;
-    private int lastConnectedIndex = 0;
+    private int lastConnectedIndex = -1;
+    private final int maxCircuitSize;
 
     Grid3D(List<Position3D> positions) {
+        this.maxCircuitSize = positions.size();
         this.inner = positions.stream()
             .flatMap(position -> positions.stream()
                 .filter(not(position::equals))
@@ -30,13 +35,13 @@ class Grid3D {
     }
 
     public void connectNearestUnconnectedPair() {
+        lastConnectedIndex++;
         var proximity = inner.get(lastConnectedIndex);
 
         int firstCircuitIndex = findCircuitContaining(proximity.start());
         int secondCircuitIndex = findCircuitContaining(proximity.end());
 
         if (firstCircuitIndex >= 0 && firstCircuitIndex == secondCircuitIndex) {
-            lastConnectedIndex++;
             return;
         }
 
@@ -59,8 +64,6 @@ class Grid3D {
 
         circuit.add(proximity.start());
         circuit.add(proximity.end());
-
-        lastConnectedIndex++;
     }
 
     private int findCircuitContaining(Position3D position) {
@@ -78,5 +81,13 @@ class Grid3D {
 
     private boolean isAscending(PositionsAndDistance positionsAndDistance) {
         return scalarValue(positionsAndDistance.start()) >= scalarValue(positionsAndDistance.end());
+    }
+
+    public PositionsAndDistance lastConnected() {
+        return inner.get(lastConnectedIndex);
+    }
+
+    public boolean fullyConnected() {
+        return this.circuits.size() == 1 && this.circuits.getFirst().size() == maxCircuitSize;
     }
 }

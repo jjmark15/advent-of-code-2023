@@ -19,4 +19,15 @@ class DaySolution {
             .mapToLong(Integer::longValue)
             .reduce(1, (a, b) -> a * b);
     }
+
+    long part2(List<Position3D> input) {
+        Grid3D grid = new Grid3D(input);
+
+        while (!grid.fullyConnected()) {
+            grid.connectNearestUnconnectedPair();
+        }
+
+        PositionsAndDistance lastConnected = grid.lastConnected();
+        return lastConnected.start().x() * lastConnected.end().x();
+    }
 }
